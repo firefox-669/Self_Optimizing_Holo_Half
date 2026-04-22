@@ -111,3 +111,6 @@ examples/*.py
 
 # Self_Optimizing_Holo_Evolution directory (separate project)
 ../Self_Optimizing_Holo_Evolution/
+
+# SOHH subdirectory (should not exist)
+SOHH/
