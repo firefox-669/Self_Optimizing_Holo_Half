@@ -1,0 +1,37 @@
+# Self_Optimizing_Holo_Half 依赖
+
+# 核心依赖
+aiohttp>=3.9.0
+pydantic>=2.0.0
+
+# OpenHands (官方 Python SDK)
+openhands>=0.1.0
+
+# OpenSpace (从 GitHub 安装)
+# pip install -e git+https://github.com/HKUDS/OpenSpace.git
+
+# LLM 支持 (用于建议生成和深度分析)
+openai>=1.0.0
+anthropic>=0.18.0
+
+# 版本控制
+gitpython>=3.1.0
+
+# 异步支持
+tenacity>=8.0.0
+
+# 数据分析和统计
+numpy>=1.24.0
+scipy>=1.10.0
+statistics>=1.0.0
+
+# 配置管理
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# 日志和监控
+logging>=0.4.9.6
+
+# 测试（可选）
+pytest>=7.0.0
+pytest-asyncio>=0.21.0

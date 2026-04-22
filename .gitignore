@@ -1,0 +1,113 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# Database
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+# Logs
+data/logs/
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Distribution / packaging
+*.tar.gz
+*.zip
+*.whl
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Documentation build (if using Sphinx)
+docs/_build/
+
+# Local configuration
+config.local.yaml
+*.local.yaml
+
+# Internal analysis documents (DO NOT COMMIT)
+ARCHITECTURE_LIMITATIONS.md
+ARCHITECTURE_LIMITATION_MODIFY.md
+*_LIMITATIONS.md
+*_MODIFY.md
+
+# Old/deprecated directories (DO NOT COMMIT)
+ai_news/
+analyzer/
+evaluation/
+evolution/
+executor/
+monitor/
+optimizer/
+patches/
+
+# Deployment scripts with potential secrets
+deploy.py
+config_evolution.py
+
+# Test files with real credentials
+*test_maas*.py
+*test_api*.py
+*credentials*.py
+
+# Example files (should be in examples/ directory)
+example.py
+examples/*.py
+!examples/__init__.py
+
+# Self_Optimizing_Holo_Evolution directory (separate project)
+../Self_Optimizing_Holo_Evolution/
