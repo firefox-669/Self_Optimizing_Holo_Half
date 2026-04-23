@@ -1,12 +1,16 @@
 """
 自动优化引擎
 评估、执行优化建议，并进行效果评估
+支持真正的代码修改和自动回退
 """
 
 import asyncio
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from datetime import datetime
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AutoOptimizer:
@@ -66,7 +70,7 @@ class AutoOptimizer:
             result["applied"] = await self._apply_connection(suggestion, context)
         
         elif suggestion_type in ["capability_enhancement", "feature_enhancement"]:
-            result["applied"] = await self._apply_enhancement(suggestion, context)
+            result = await self._apply_code_enhancement(suggestion, context)
         
         elif suggestion_type == "version_update":
             result["applied"] = await self._apply_version_update(suggestion, context)
@@ -109,6 +113,67 @@ class AutoOptimizer:
                     return True
         
         return False
+    
+    async def _apply_code_enhancement(
+        self, 
+        suggestion: Dict,
+        context: Dict[str, Any] = None,
+    ) -> Dict[str, Any]:
+        """
+        应用代码增强（真正的代码修改）
+        
+        使用 CodeGenerator 生成代码补丁，然后用 CodeApplier 安全应用
+        """
+        from core.code_generator import CodeGenerator
+        from core.code_applier import CodeApplier
+        
+        result = {
+            "suggestion_id": suggestion.get("id"),
+            "applied": False,
+            "error": None,
+            "timestamp": datetime.now().isoformat(),
+            "modified_files": [],
+            "new_files": [],
+            "backup_id": None
+        }
+        
+        try:
+            logger.info(f"🔧 Applying code enhancement: {suggestion.get('title')}")
+            
+            # 1. 生成代码补丁
+            code_gen = CodeGenerator()
+            patch = await code_gen.generate_code_patch(suggestion)
+            
+            if not patch.get("success"):
+                result["error"] = f"Code generation failed: {patch.get('error')}"
+                logger.error(result["error"])
+                return result
+            
+            logger.info(f"✅ Code patch generated: {len(patch.get('files_to_modify', []))} files to modify, {len(patch.get('new_files', []))} new files")
+            
+            # 2. 应用代码补丁
+            code_applier = CodeApplier(str(self.workspace))
+            apply_result = await code_applier.apply_code_patch(
+                patch=patch,
+                run_tests=True  # 运行测试验证
+            )
+            
+            if apply_result["success"]:
+                result["applied"] = True
+                result["modified_files"] = apply_result["modified_files"]
+                result["new_files"] = apply_result["new_files"]
+                result["backup_id"] = apply_result["backup_id"]
+                logger.info(f"✅ Code enhancement applied successfully!")
+            else:
+                result["error"] = f"Code application failed: {apply_result.get('error')}"
+                logger.error(result["error"])
+            
+            return result
+        
+        except Exception as e:
+            result["error"] = f"Exception during code enhancement: {str(e)}"
+            logger.error(result["error"], exc_info=True)
+            return result
     
     async def _apply_enhancement(
         self, 
