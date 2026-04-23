@@ -1,6 +1,7 @@
 """
 Evolution Suggestion 引擎
 生成和管理 Evolution Suggestions
+使用 LLM 进行智能分析
 """
 
 import asyncio
@@ -8,6 +9,9 @@ from pathlib import Path
 from typing import Any, Dict, List
 from datetime import datetime
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class EvolutionSuggestionEngine:
@@ -45,25 +49,47 @@ class EvolutionSuggestionEngine:
         existing_analysis: Dict[str, Any] = None,
         info_analysis: List[Dict] = None,
         project_analysis: Dict[str, Any] = None,
+        use_llm: bool = True,
     ) -> List[Dict]:
         """
         生成 Evolution Suggestions
         
         综合所有分析结果，生成可执行的建议
+        
+        Args:
+            existing_analysis: 现有能力分析
+            info_analysis: 资讯分析结果
+            project_analysis: 项目自分析结果
+            use_llm: 是否使用 LLM 分析（默认 True）
         """
         suggestions = []
+        llm_suggestions = []
         
-        # 1. 基于现有能力分析的建议
+        # 1. 基于现有能力分析的建议（规则引擎）
         if existing_analysis:
             suggestions.extend(self._from_existing_analysis(existing_analysis))
         
-        # 2. 基于资讯的建议
-        if info_analysis:
+        # 2. 基于资讯的建议（使用 LLM）
+        if info_analysis and use_llm:
+            try:
+                logger.info("🧠 Using LLM to analyze info...")
+                llm_suggestions = await self._analyze_with_llm(info_analysis)
+                logger.info(f"✅ LLM generated {len(llm_suggestions)} suggestions")
+            except Exception as e:
+                logger.warning(f"⚠️ LLM analysis failed, falling back to rule-based: {e}")
+                # Fallback: 使用规则引擎
+                suggestions.extend(self._from_info_analysis(info_analysis))
+        elif info_analysis:
+            # 不使用 LLM，使用规则引擎
             suggestions.extend(self._from_info_analysis(info_analysis))
         
-        # 3. 基于项目自分析的建议
+        # 3. 基于项目自分析的建议（规则引擎）
         if project_analysis:
             suggestions.extend(self._from_project_analysis(project_analysis))
+        
+        # 合并 LLM 建议和规则建议
+        if llm_suggestions:
+            suggestions.extend(llm_suggestions)
         
         # 去重并排序
         suggestions = self._deduplicate(suggestions)
@@ -135,6 +161,39 @@ class EvolutionSuggestionEngine:
                 })
         
         return suggestions
+    
+    async def _analyze_with_llm(self, info_items: List[Dict]) -> List[Dict]:
+        """
+        使用 LLM 分析资讯，生成改进建议
+        
+        Args:
+            info_items: 资讯列表
+            
+        Returns:
+            LLM 生成的建议列表
+        """
+        from core.llm_client import LLMClient
+        
+        try:
+            # 初始化 LLM 客户端
+            llm = LLMClient()
+            
+            # 调用 LLM 分析
+            suggestions = await llm.analyze_info(info_items)
+            
+            # 为每个建议添加 ID 和状态
+            for i, suggestion in enumerate(suggestions):
+                suggestion['id'] = f"llm_{suggestion.get('target', 'unknown')}_{datetime.now().strftime('%Y%m%d%H%M%S')}_{i}"
+                suggestion['status'] = 'pending'
+                suggestion['generated_by'] = 'llm'
+                suggestion['llm_provider'] = llm.provider
+                suggestion['llm_model'] = llm.model
+            
+            return suggestions
+        
+        except Exception as e:
+            logger.error(f"LLM analysis failed: {e}")
+            raise
     
     def _from_info_analysis(self, info: List[Dict]) -> List[Dict]:
         """从资讯分析生成建议"""
