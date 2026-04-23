@@ -3,6 +3,7 @@
 # 核心依赖
 aiohttp>=3.9.0
 pydantic>=2.0.0
+schedule>=1.2.0  # 定时任务调度
 
 # OpenHands (官方 Python SDK)
 openhands>=0.1.0

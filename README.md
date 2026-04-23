@@ -89,25 +89,36 @@ Unlike traditional static AI agents, SOHH uses:
 
 ## 🚀 Quick Start
 
+### ⚡ One-Click Installation (Recommended)
+
+**Windows:**
+```bash
+git clone https://github.com/firefox-669/Self_Optimizing_Holo_Half.git
+cd Self_Optimizing_Holo_Half
+setup.bat  # One-click installation!
+```
+
+**Linux/Mac:**
+```bash
+git clone https://github.com/firefox-669/Self_Optimizing_Holo_Half.git
+cd Self_Optimizing_Holo_Half
+chmod +x setup.sh
+./setup.sh  # One-click installation!
+```
+
+The setup script will:
+- ✅ Check Python and pip
+- ✅ Install all dependencies
+- ✅ Initialize database
+- ✅ Create .env file from template
+- ✅ Run tests to verify installation
+
 ### Prerequisites
 
-- Python 3.10+
-- OpenHands running (local or remote)
-- OpenSpace running (local or remote)
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/firefox-669/Self_Optimizing_Holo_Half.git
-cd self-optimizing-holo-half
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Initialize database
-python user_scoring/database.py
-```
+- **Python 3.10+** (required)
+- **LLM API Key** (OpenAI, Anthropic, or compatible)
+- **OpenHands service** (optional, for task execution)
+- **OpenSpace** (optional, for skill evolution)
 
 ### Configuration
 

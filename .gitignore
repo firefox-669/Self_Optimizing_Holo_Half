@@ -79,35 +79,30 @@ docs/_build/
 config.local.yaml
 *.local.yaml
 
-# Internal analysis documents (DO NOT COMMIT)
-ARCHITECTURE_LIMITATIONS.md
-ARCHITECTURE_LIMITATION_MODIFY.md
-*_LIMITATIONS.md
-*_MODIFY.md
+# Internal analysis documents (excluded - too large for initial commit)
+ARCHITECTURE_LIMITATIONS.md          # 72KB - 架构缺陷分析
+ARCHITECTURE_LIMITATION_MODIFY.md    # 429KB - 改进方案
+REAL_MATCH_REPORT.md                 # 文章匹配度报告
+VERIFY_ARTICLE_MATCH.md              # 验证文档
+ARTICLE_CLAIMS_FULFILLMENT.md        # 承诺兑现报告
 
-# Old/deprecated directories (DO NOT COMMIT)
-ai_news/
-analyzer/
-evaluation/
-evolution/
-executor/
-monitor/
-optimizer/
-patches/
+# Development and deployment scripts (not needed for end users)
+cleanup_before_commit.bat              # 开发用清理脚本
+config_evolution.py                    # 配置演化脚本（可能包含敏感信息）
+deploy.py                              # 部署脚本（可能包含服务器配置）
 
-# Deployment scripts with potential secrets
-deploy.py
-config_evolution.py
+# Old/example files (superseded by demo.py and examples/)
+example.py                             # 旧示例文件，已被 demo.py 替代
 
-# Test files with real credentials
-*test_maas*.py
-*test_api*.py
-*credentials*.py
-
-# Example files (should be in examples/ directory)
-example.py
-examples/*.py
-!examples/__init__.py
+# Test and validation scripts (useful for development but optional for release)
+check_syntax.py                        # 语法检查工具
+test_engine.py                         # 引擎测试
+GITHUB_READY_CHECKLIST.md              # GitHub 提交检查清单
+GIT_SAFETY_CHECKLIST.md                # Git 安全检查清单
+RELEASE_CHECKLIST.md                   # 发布检查清单
+COMPLETION_REPORT.md                   # 完成报告
+IMPLEMENTATION_PLAN.md                 # 实现计划（超大文件 76KB）
+IMPLEMENTATION_PROGRESS.md             # 实现进度
 
 # Self_Optimizing_Holo_Evolution directory (separate project)
 ../Self_Optimizing_Holo_Evolution/
