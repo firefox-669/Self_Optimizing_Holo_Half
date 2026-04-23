@@ -1,0 +1,53 @@
+# 自定义评分规则配置
+# Custom Scoring Rules Configuration
+
+# 是否启用自定义规则
+enabled: true
+
+# 自定义权重（覆盖默认权重）
+# 所有权重之和应为 1.0
+custom_weights:
+  success_rate: 0.30        # 成功率权重（默认 0.25）
+  efficiency: 0.25          # 效率权重（默认 0.20）
+  user_satisfaction: 0.20   # 满意度权重（不变）
+  skill_effectiveness: 0.15 # Skill 效果（不变）
+  error_handling: 0.05      # 错误处理（默认 0.10，降低）
+  integration: 0.05         # 集成度（默认 0.10，降低）
+
+# 自定义评分阈值
+thresholds:
+  # 效率阈值（秒）
+  efficiency:
+    excellent: 30    # < 30秒 = 优秀（默认 60）
+    poor: 180        # > 180秒 = 差（默认 300）
+  
+  # 满意度迭代次数阈值
+  satisfaction:
+    max_iterations: 30  # 超过 30 次迭代满意度降到最低（默认 50）
+  
+  # 最低接受分数
+  min_acceptable_score: 0.7  # 低于此分数建议回退
+
+# 自定义评分规则（高级）
+custom_rules:
+  # 规则 1: 如果成功率 < 50%，总分直接减半
+  - name: "low_success_penalty"
+    condition: "success_rate < 0.5"
+    action: "multiply_total_by_0.5"
+    description: "成功率过低时严重惩罚"
+  
+  # 规则 2: 如果效率优秀且满意度高，额外加分
+  - name: "efficiency_bonus"
+    condition: "efficiency > 0.9 and user_satisfaction > 0.8"
+    action: "add_0.05_to_total"
+    description: "高效且用户满意时奖励"
+  
+  # 规则 3: 如果 Skill 效果满分，额外加分
+  - name: "skill_mastery_bonus"
+    condition: "skill_effectiveness == 1.0"
+    action: "add_0.03_to_total"
+    description: "Skill 完全掌握时奖励"
+
+# 禁用某些评分维度（可选）
+# disabled_dimensions:
+#   - integration  # 如果不关心集成度，可以禁用

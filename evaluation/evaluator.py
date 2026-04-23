@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 from datetime import datetime
 
+from evaluation.custom_rules import CustomScoringRules
+
 
 class CapabilityEvaluator:
     """
@@ -16,6 +18,9 @@ class CapabilityEvaluator:
         self._baseline_scores: Dict[str, float] = {}
         self._current_scores: Dict[str, float] = {}
         self._evaluation_history: List[Dict] = []
+        
+        # 加载自定义评分规则
+        self.custom_rules = CustomScoringRules(str(self.workspace))
         
         self._load_baseline()
 
@@ -39,21 +44,44 @@ class CapabilityEvaluator:
                 "updated": datetime.now().isoformat(),
             }, f, indent=2)
 
-    def evaluate(self) -> Dict[str, float]:
+    def evaluate(self, execution_history: List[Dict] = None) -> Dict[str, float]:
         """
         评估当前项目能力
+        
+        Args:
+            execution_history: 执行历史记录（可选），用于基于真实使用数据评分
         """
         scores = {}
         
-        scores["execution"] = self._evaluate_execution()
-        scores["evolution"] = self._evaluate_evolution()
-        scores["safety"] = self._evaluate_safety()
-        scores["integration"] = self._evaluate_integration()
-        scores["performance"] = self._evaluate_performance()
+        # 如果有执行历史，使用真实数据评分
+        if execution_history and len(execution_history) > 0:
+            scores["success_rate"] = self._evaluate_success_rate(execution_history)
+            scores["efficiency"] = self._evaluate_efficiency(execution_history)
+            scores["user_satisfaction"] = self._evaluate_user_satisfaction(execution_history)
+            scores["skill_effectiveness"] = self._evaluate_skill_effectiveness(execution_history)
+            scores["error_handling"] = self._evaluate_error_handling(execution_history)
+        else:
+            # 否则使用静态代码分析（基线评估）
+            scores["success_rate"] = self._evaluate_execution()
+            scores["efficiency"] = self._evaluate_performance()
+            scores["user_satisfaction"] = 0.5  # 默认值
+            scores["skill_effectiveness"] = self._evaluate_evolution()
+            scores["error_handling"] = self._evaluate_safety()
+        
+        # 集成度评分（始终基于代码结构）
+        if self.custom_rules.is_dimension_enabled("integration"):
+            scores["integration"] = self._evaluate_integration()
         
         self._current_scores = scores
         
-        overall = sum(scores.values()) / len(scores) if scores else 0.0
+        # 计算总分（加权平均，支持自定义权重）
+        weights = self.custom_rules.get_weights()
+        
+        overall = sum(scores.get(k, 0) * v for k, v in weights.items())
+        
+        # 应用自定义规则调整总分
+        overall = self.custom_rules.apply_custom_rules(scores, overall)
+        
         scores["overall"] = round(overall, 3)
         
         return scores
@@ -148,15 +176,118 @@ class CapabilityEvaluator:
         
         return min(1.0, score)
 
-    def compare_before_after(self) -> Dict[str, Any]:
+    def _evaluate_success_rate(self, execution_history: List[Dict]) -> float:
+        """评估任务成功率（基于真实执行数据）"""
+        if not execution_history:
+            return 0.5
+        
+        total = len(execution_history)
+        successful = sum(1 for exec_rec in execution_history if exec_rec.get("result", {}).get("success", False))
+        
+        success_rate = successful / total if total > 0 else 0.5
+        return round(success_rate, 3)
+
+    def _evaluate_efficiency(self, execution_history: List[Dict]) -> float:
+        """评估执行效率（平均执行时间）"""
+        if not execution_history:
+            return 0.5
+        
+        durations = []
+        for exec_rec in execution_history:
+            result = exec_rec.get("result", {})
+            if "duration" in result:
+                durations.append(result["duration"])
+        
+        if not durations:
+            return 0.5
+        
+        avg_duration = sum(durations) / len(durations)
+        
+        # 使用自定义阈值
+        excellent_threshold = self.custom_rules.get_threshold("efficiency", "excellent", 60)
+        poor_threshold = self.custom_rules.get_threshold("efficiency", "poor", 300)
+        
+        if avg_duration < excellent_threshold:
+            return 1.0
+        elif avg_duration > poor_threshold:
+            return 0.3
+        else:
+            return round(1.0 - (avg_duration - excellent_threshold) / (poor_threshold - excellent_threshold) * 0.7, 3)
+
+    def _evaluate_user_satisfaction(self, execution_history: List[Dict]) -> float:
+        """评估用户满意度"""
+        if not execution_history:
+            return 0.5
+        
+        # 使用自定义阈值
+        max_iterations = self.custom_rules.get_threshold("satisfaction", "max_iterations", 50)
+        
+        satisfaction_scores = []
+        for exec_rec in execution_history:
+            result = exec_rec.get("result", {})
+            if result.get("success"):
+                iterations = result.get("iterations", 10)
+                sat = max(0.5, 1.0 - (iterations / max_iterations))
+                satisfaction_scores.append(sat)
+            else:
+                satisfaction_scores.append(0.3)
+        
+        return round(sum(satisfaction_scores) / len(satisfaction_scores), 3) if satisfaction_scores else 0.5
+
+    def _evaluate_skill_effectiveness(self, execution_history: List[Dict]) -> float:
+        """评估 Skill 使用效果"""
+        if not execution_history:
+            return 0.5
+        
+        skill_improvements = 0
+        total_tasks = len(execution_history)
+        
+        for exec_rec in execution_history:
+            result = exec_rec.get("result", {})
+            evolution = result.get("evolution", {})
+            
+            if evolution.get("skills_captured") or evolution.get("optimizations_applied"):
+                skill_improvements += 1
+        
+        if total_tasks == 0:
+            return 0.5
+        
+        effectiveness = skill_improvements / total_tasks
+        return round(min(1.0, 0.5 + effectiveness * 0.5), 3)
+
+    def _evaluate_error_handling(self, execution_history: List[Dict]) -> float:
+        """评估错误处理能力"""
+        if not execution_history:
+            return 0.5
+        
+        errors_occurred = 0
+        errors_recovered = 0
+        
+        for exec_rec in execution_history:
+            result = exec_rec.get("result", {})
+            if result.get("error"):
+                errors_occurred += 1
+                if result.get("success"):
+                    errors_recovered += 1
+        
+        if errors_occurred == 0:
+            return 1.0
+        
+        recovery_rate = errors_recovered / errors_occurred
+        return round(0.5 + recovery_rate * 0.5, 3)
+
+    def compare_before_after(self, execution_history: List[Dict] = None) -> Dict[str, Any]:
         """
         比较修改前后的能力变化
+        
+        Args:
+            execution_history: 执行历史记录（用于基于真实数据评分）
         """
         if not self._baseline_scores:
-            self._baseline_scores = self.evaluate()
+            self._baseline_scores = self.evaluate(execution_history)
             self._save_baseline()
         
-        current = self.evaluate()
+        current = self.evaluate(execution_history)
         
         changes = {}
         for key in current:

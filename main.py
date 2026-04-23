@@ -79,20 +79,36 @@ async def main():
             
             if mode == "evolution":
                 print("="*60)
-                print("🔄 Running Self-Evolution Cycle")
+                print("🔄 Self-Evolution Mode")
                 print("="*60)
                 
-                # 运行进化循环
-                result = await engine.run_self_evolution_cycle()
+                # Step 1: 启动时进化一次（优化系统）
+                print("\n📊 Phase 1: Pre-execution Evolution (Optimizing system...)")
+                pre_result = await engine.run_self_evolution_cycle()
+                print(f"   Status: {pre_result.get('status', 'unknown')}")
+                if pre_result.get('suggestions'):
+                    print(f"   Suggestions generated: {len(pre_result['suggestions'])}")
+                if pre_result.get('applied'):
+                    print(f"   Optimizations applied: {len(pre_result['applied'])}")
                 
-                print("\n📊 Evolution Results:")
-                print(f"   Status: {result.get('status', 'unknown')}")
-                if result.get('analysis'):
-                    print(f"   Analysis completed: ✅")
-                if result.get('suggestions'):
-                    print(f"   Suggestions generated: {len(result['suggestions'])}")
-                if result.get('applied'):
-                    print(f"   Optimizations applied: {len(result['applied'])}")
+                # Step 2: 等待用户交互/执行任务
+                print("\n✨ System optimized! Ready for tasks.")
+                print("💡 Example: result = await engine.execute('Your task here')")
+                print("⏳  Press Ctrl+C when finished to trigger post-execution evolution...\n")
+                
+                try:
+                    while True:
+                        await asyncio.sleep(1)
+                except KeyboardInterrupt:
+                    print("\n\n📊 Phase 2: Post-execution Evolution (Learning from usage...)")
+                    # Step 3: 结束时再进化一次（根据用户行为学习）
+                    post_result = await engine.run_self_evolution_cycle()
+                    print(f"   Status: {post_result.get('status', 'unknown')}")
+                    if post_result.get('suggestions'):
+                        print(f"   New suggestions: {len(post_result['suggestions'])}")
+                    if post_result.get('applied'):
+                        print(f"   Improvements applied: {len(post_result['applied'])}")
+                    print("\n✅ Evolution complete! System is now smarter.")
             
             elif args.auto:
                 print("="*60)
