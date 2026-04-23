@@ -55,11 +55,12 @@ Unlike traditional static AI agents, SOHH uses:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                    User Interface Layer                      │
+│              (CLI / API / Auto Scheduler)                   │
 └──────────────────────┬──────────────────────────────────────┘
                        │
 ┌──────────────────────▼──────────────────────────────────────┐
 │                 Mode Management Layer                        │
-│              (Normal / Evolution Mode)                       │
+│         Normal | Evolution | Auto-Schedule                  │
 └──────────┬────────────────────────────┬─────────────────────┘
            │                            │
 ┌──────────▼──────────┐    ┌───────────▼──────────────────────┐
@@ -71,19 +72,58 @@ Unlike traditional static AI agents, SOHH uses:
            └───────────┬───────────────┘
                        │
 ┌──────────────────────▼──────────────────────────────────────┐
-│            Self_Optimizing_Holo_Half Core                   │
+│            Self_Evolution Core (NEW!)                       │
 │                                                             │
-│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────┐   │
-│  │   Behavior  │  │   Scoring    │  │   A/B Testing   │   │
-│  │  Tracking   │──│   Engine     │──│   Framework     │   │
-│  └─────────────┘  └──────────────┘  └─────────────────┘   │
-│                                                             │
-│  ┌─────────────┐  ┌──────────────┐  ┌─────────────────┐   │
-│  │ Capability  │  │ Performance  │  │   Version       │   │
-│  │  Analyzer   │  │  Monitor     │  │   Control       │   │
-│  └─────────────┘  └──────────────┘  └─────────────────┘   │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │          Evolution Loop Controller                   │   │
+│  │  1. Analysis → 2. Suggestion → 3. Application       │   │
+│  │  4. Testing → 5. Evaluation → 6. Decision           │   │
+│  └────────────────────┬────────────────────────────────┘   │
+│                       │                                     │
+│  ┌────────────────────▼────────────────────────────────┐   │
+│  │              LLM Intelligence Layer                  │   │
+│  │  • LLM Client (OpenAI/Anthropic)                     │   │
+│  │  • Code Generator (Auto-patch creation)              │   │
+│  │  • Smart Suggestion Engine                           │   │
+│  └────────────────────┬────────────────────────────────┘   │
+│                       │                                     │
+│  ┌────────────────────▼────────────────────────────────┐   │
+│  │          Safe Code Application Layer                 │   │
+│  │  • Code Applier (with backup)                        │   │
+│  │  • AST Syntax Validation                             │   │
+│  │  • Automated Testing (pytest)                        │   │
+│  │  • Auto-Rollback on Failure                          │   │
+│  └────────────────────┬────────────────────────────────┘   │
+│                       │                                     │
+│  ┌────────────────────▼────────────────────────────────┐   │
+│  │        Scientific Evaluation Framework               │   │
+│  │  • 6-Dimension Scoring (customizable weights)        │   │
+│  │  • A/B Testing (Z-test, T-test)                      │   │
+│  │  • Custom Rules Engine                               │   │
+│  │  • Statistical Significance Testing                  │   │
+│  └────────────────────┬────────────────────────────────┘   │
+│                       │                                     │
+│  ┌────────────────────▼────────────────────────────────┐   │
+│  │          Version Control & Monitoring                │   │
+│  │  • Git-based Snapshots                               │   │
+│  │  • Change Logger                                     │   │
+│  │  • Rollback Manager                                  │   │
+│  │  • Performance Monitor                               │   │
+│  └─────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+### 🔑 Key Components
+
+| Component | Purpose |
+|-----------|---------|
+| **Evolution Loop** | Orchestrates the complete self-evolution cycle |
+| **LLM Client** | Integrates with OpenAI/Anthropic for intelligent analysis |
+| **Code Generator** | Creates Python code patches from suggestions |
+| **Code Applier** | Safely applies code changes with automatic backup |
+| **Custom Rules** | Allows users to customize scoring weights and thresholds |
+| **A/B Testing** | Statistical validation of improvements |
+| **Version Control** | Git-based snapshots with one-click rollback |
 
 ---
 
