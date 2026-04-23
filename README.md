@@ -99,7 +99,7 @@ Unlike traditional static AI agents, SOHH uses:
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/self-optimizing-holo-half.git
+git clone https://github.com/firefox-669/Self_Optimizing_Holo_Half.git
 cd self-optimizing-holo-half
 
 # Install dependencies
@@ -364,8 +364,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📬 Contact
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/YOUR_USERNAME/self-optimizing-holo-half/issues)
-- **Discussions**: [Join the community](https://github.com/YOUR_USERNAME/self-optimizing-holo-half/discussions)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/firefox-669/Self_Optimizing_Holo_Half/issues)
+- **Discussions**: [Join the community](https://github.com/firefox-669/Self_Optimizing_Holo_Half/discussions)
 
 ---
 
