@@ -1,0 +1,63 @@
+{
+  "report_id": "analysis_1777010090.937564",
+  "agent_id": "openhands-v1.0",
+  "generated_at": "2026-04-24T13:54:50.937585",
+  "analysis_period_days": 30,
+  "metrics_summary": {
+    "success_rate": 75.75,
+    "efficiency_gain": 72.33,
+    "user_satisfaction": 82.72,
+    "usage_activity": 79.58,
+    "cost_efficiency": 65.5,
+    "innovation": 69.76,
+    "overall_score": 77.16
+  },
+  "insights": [],
+  "trends": {
+    "success_rate": "improving",
+    "efficiency_gain": "improving",
+    "overall_score": "improving"
+  },
+  "benchmarks": {
+    "success_rate": {
+      "current": 75.75,
+      "benchmark_average": 75.0,
+      "benchmark_good": 85.0,
+      "benchmark_excellent": 95.0,
+      "level": "average",
+      "gap_to_good": 9.25
+    },
+    "efficiency_gain": {
+      "current": 72.33,
+      "benchmark_average": 60.0,
+      "benchmark_good": 75.0,
+      "benchmark_excellent": 90.0,
+      "level": "average",
+      "gap_to_good": 2.67
+    },
+    "user_satisfaction": {
+      "current": 82.72,
+      "benchmark_average": 70.0,
+      "benchmark_good": 80.0,
+      "benchmark_excellent": 90.0,
+      "level": "good",
+      "gap_to_good": -2.72
+    },
+    "cost_efficiency": {
+      "current": 65.5,
+      "benchmark_average": 65.0,
+      "benchmark_good": 75.0,
+      "benchmark_excellent": 85.0,
+      "level": "average",
+      "gap_to_good": 9.5
+    },
+    "innovation": {
+      "current": 69.76,
+      "benchmark_average": 60.0,
+      "benchmark_good": 70.0,
+      "benchmark_excellent": 80.0,
+      "level": "average",
+      "gap_to_good": 0.24
+    }
+  }
+}

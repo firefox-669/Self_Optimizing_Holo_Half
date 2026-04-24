@@ -171,6 +171,20 @@ def init_db(db_path: str = None):
             )
         """)
         
+        # 7. 任务记录表 (用于报告展示)
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS task_records (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT UNIQUE NOT NULL,
+                description TEXT,
+                success BOOLEAN DEFAULT 0,
+                duration REAL DEFAULT 0,
+                iterations INTEGER DEFAULT 0,
+                error_message TEXT,
+                timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
         # 创建索引以提升查询性能
         db.execute("CREATE INDEX IF NOT EXISTS idx_task_executions_user ON task_executions(user_id)")
         db.execute("CREATE INDEX IF NOT EXISTS idx_task_executions_status ON task_executions(status)")

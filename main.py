@@ -91,24 +91,37 @@ async def main():
                 if pre_result.get('applied'):
                     print(f"   Optimizations applied: {len(pre_result['applied'])}")
                 
-                # Step 2: 等待用户交互/执行任务
-                print("\n✨ System optimized! Ready for tasks.")
-                print("💡 Example: result = await engine.execute('Your task here')")
-                print("⏳  Press Ctrl+C when finished to trigger post-execution evolution...\n")
+                # Step 2: 模拟用户交互/执行任务
+                print("\n✨ System optimized! Simulating task execution...")
+                await asyncio.sleep(2)  # 模拟执行时间
                 
-                try:
-                    while True:
-                        await asyncio.sleep(1)
-                except KeyboardInterrupt:
-                    print("\n\n📊 Phase 2: Post-execution Evolution (Learning from usage...)")
-                    # Step 3: 结束时再进化一次（根据用户行为学习）
-                    post_result = await engine.run_self_evolution_cycle()
-                    print(f"   Status: {post_result.get('status', 'unknown')}")
-                    if post_result.get('suggestions'):
-                        print(f"   New suggestions: {len(post_result['suggestions'])}")
-                    if post_result.get('applied'):
-                        print(f"   Improvements applied: {len(post_result['applied'])}")
-                    print("\n✅ Evolution complete! System is now smarter.")
+                print("\n📊 Phase 2: Post-execution Evolution (Learning from usage...)")
+                # Step 3: 结束时再进化一次（根据用户行为学习）
+                post_result = await engine.run_self_evolution_cycle()
+                print(f"   Status: {post_result.get('status', 'unknown')}")
+                if post_result.get('suggestions'):
+                    print(f"   New suggestions: {len(post_result['suggestions'])}")
+                if post_result.get('applied'):
+                    print(f"   Improvements applied: {len(post_result['applied'])}")
+                                
+                # Step 4: 生成全息进化报告
+                print("\n📊 Generating Holo-Evolution Report...")
+                from evaluation.evaluator import CapabilityEvaluator
+                from evaluation.report_generator import HoloReportGenerator
+                                
+                evaluator = CapabilityEvaluator()
+                # 这里暂时使用模拟数据，后续接入真实执行历史
+                mock_history = [
+                    {"result": {"success": True, "duration": 10}},
+                    {"result": {"success": True, "duration": 12}},
+                ]
+                scores = evaluator.evaluate(execution_history=mock_history)
+                                
+                reporter = HoloReportGenerator()
+                report_path = reporter.generate_holo_dashboard(scores, history=mock_history)
+                print(f"✅ Report generated: {report_path}")
+                print("💡 Open this file in your browser to see the dashboard!")
+                print("\n✅ Evolution complete! System is now smarter.")
             
             elif args.auto:
                 print("="*60)

@@ -153,4 +153,5 @@ class EvoEngine:
 
     async def shutdown(self):
         if self._openspace:
-            await self._openspace.close()
+            if hasattr(self._openspace, 'close'):
+                await self._openspace.close()

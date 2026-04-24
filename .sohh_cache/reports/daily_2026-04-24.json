@@ -1,0 +1,47 @@
+{
+  "date": "2026-04-24",
+  "summary": {
+    "tasks_executed": 0,
+    "success_rate": 0,
+    "skills_evolved": 0,
+    "optimizations_applied": 0,
+    "project_health_score": 0.5
+  },
+  "changes": [],
+  "pending_suggestions": [
+    {
+      "id": "oh_connect_20260424090105",
+      "title": "\u8fde\u63a5 OpenHands \u670d\u52a1",
+      "priority": 10
+    },
+    {
+      "id": "os_connect_20260424090105",
+      "title": "\u8fde\u63a5 OpenSpace \u670d\u52a1",
+      "priority": 10
+    },
+    {
+      "id": "os_skills_20260424090105",
+      "title": "\u589e\u52a0 Skills \u6570\u91cf",
+      "priority": 6
+    },
+    {
+      "id": "proj_tests_20260424090105",
+      "title": "\u6dfb\u52a0\u6d4b\u8bd5\u8986\u76d6",
+      "priority": 5
+    },
+    {
+      "id": "info_None_20260424090105",
+      "title": "",
+      "priority": 0.5
+    }
+  ],
+  "project_health": {
+    "last_analysis": "2026-04-24T08:59:56.783449",
+    "modules_count": 12,
+    "has_readme": true,
+    "has_requirements": true,
+    "has_tests": false,
+    "has_.plan": true
+  },
+  "generated_at": "2026-04-24T09:01:36.385779"
+}

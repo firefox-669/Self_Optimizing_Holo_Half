@@ -222,7 +222,7 @@ class DeepAnalyzer:
             "current": current_scores,
             "delta": round(delta, 3),
             "details": {
-                key: round(current_scores.get(key, 0) - baseline_scores.get(key, 0), 
+                key: round(current_scores.get(key, 0) - baseline_scores.get(key, 0), 3)
                 for key in current_scores
             },
         }

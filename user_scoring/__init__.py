@@ -11,6 +11,7 @@ from .event_logger import EventLogger
 from .metrics_calculator import MetricsCalculator
 from .database import DatabaseManager, init_db
 from .ab_testing import ABTestFramework, ABTestResult, TestType, Decision, ab_test
+from .visualization_report import VisualizationReportGenerator
 
 __all__ = [
     "UserBehaviorTracker",
@@ -22,5 +23,6 @@ __all__ = [
     "ABTestResult",
     "TestType",
     "Decision",
-    "ab_test"
+    "ab_test",
+    "VisualizationReportGenerator"
 ]

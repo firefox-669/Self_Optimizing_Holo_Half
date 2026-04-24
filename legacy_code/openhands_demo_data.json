@@ -1,0 +1,246 @@
+{
+  "agent_id": "openhands-v1.0",
+  "project_id": "demo-project",
+  "export_time": "2026-04-24T13:47:35.907959",
+  "task_executions": [
+    {
+      "task_id": "oh-task-001",
+      "agent_id": "openhands-v1.0",
+      "project_id": "demo-project",
+      "description": "Create a Flask REST API with user authentication",
+      "status": "success",
+      "start_time": "2026-04-24T13:47:33.399755",
+      "end_time": "2026-04-24T13:47:33.900727",
+      "duration_seconds": 0.500972,
+      "success": true,
+      "error_message": null,
+      "tokens_used": 2500,
+      "cost": 0.005,
+      "iterations": 3,
+      "code_quality_score": 0.85,
+      "test_pass_rate": 0.9,
+      "metadata": "{\"framework\": \"Flask\", \"language\": \"Python\", \"difficulty\": \"medium\"}",
+      "timestamp": "2026-04-24T13:47:33.399783"
+    },
+    {
+      "task_id": "oh-task-002",
+      "agent_id": "openhands-v1.0",
+      "project_id": "demo-project",
+      "description": "Fix a Python bug in data processing pipeline",
+      "status": "success",
+      "start_time": "2026-04-24T13:47:33.901269",
+      "end_time": "2026-04-24T13:47:34.401872",
+      "duration_seconds": 0.500603,
+      "success": true,
+      "error_message": null,
+      "tokens_used": 1800,
+      "cost": 0.0036,
+      "iterations": 2,
+      "code_quality_score": 0.9,
+      "test_pass_rate": 0.95,
+      "metadata": "{\"framework\": \"Flask\", \"language\": \"Python\", \"difficulty\": \"medium\"}",
+      "timestamp": "2026-04-24T13:47:33.901278"
+    },
+    {
+      "task_id": "oh-task-003",
+      "agent_id": "openhands-v1.0",
+      "project_id": "demo-project",
+      "description": "Implement machine learning model training script",
+      "status": "failed",
+      "start_time": "2026-04-24T13:47:34.402389",
+      "end_time": "2026-04-24T13:47:34.902942",
+      "duration_seconds": 0.500553,
+      "success": false,
+      "error_message": "Timeout error during model training",
+      "tokens_used": 3500,
+      "cost": 0.007,
+      "iterations": 5,
+      "code_quality_score": 0.6,
+      "test_pass_rate": 0.7,
+      "metadata": "{\"framework\": \"Flask\", \"language\": \"Python\", \"difficulty\": \"medium\"}",
+      "timestamp": "2026-04-24T13:47:34.402402"
+    },
+    {
+      "task_id": "oh-task-004",
+      "agent_id": "openhands-v1.0",
+      "project_id": "demo-project",
+      "description": "Optimize database query performance",
+      "status": "success",
+      "start_time": "2026-04-24T13:47:34.903489",
+      "end_time": "2026-04-24T13:47:35.404214",
+      "duration_seconds": 0.500725,
+      "success": true,
+      "error_message": null,
+      "tokens_used": 2000,
+      "cost": 0.004,
+      "iterations": 2,
+      "code_quality_score": 0.88,
+      "test_pass_rate": 0.92,
+      "metadata": "{\"framework\": \"Flask\", \"language\": \"Python\", \"difficulty\": \"medium\"}",
+      "timestamp": "2026-04-24T13:47:34.903499"
+    },
+    {
+      "task_id": "oh-task-005",
+      "agent_id": "openhands-v1.0",
+      "project_id": "demo-project",
+      "description": "Build a React component library",
+      "status": "success",
+      "start_time": "2026-04-24T13:47:35.404687",
+      "end_time": "2026-04-24T13:47:35.905687",
+      "duration_seconds": 0.501,
+      "success": true,
+      "error_message": null,
+      "tokens_used": 3000,
+      "cost": 0.006,
+      "iterations": 4,
+      "code_quality_score": 0.82,
+      "test_pass_rate": 0.85,
+      "metadata": "{\"framework\": \"Flask\", \"language\": \"Python\", \"difficulty\": \"medium\"}",
+      "timestamp": "2026-04-24T13:47:35.404697"
+    }
+  ],
+  "user_feedbacks": [
+    {
+      "feedback_id": "36fa8044-50a2-4be9-be53-12243cc65ed5",
+      "task_id": "oh-task-001",
+      "user_id": "anonymous",
+      "satisfaction_score": 4.775,
+      "feedback_text": "Good quality code, 3 iterations",
+      "would_recommend": true,
+      "timestamp": "2026-04-24T13:47:33.900804"
+    },
+    {
+      "feedback_id": "4a9dab30-a022-4353-815a-635abcd898bb",
+      "task_id": "oh-task-002",
+      "user_id": "anonymous",
+      "satisfaction_score": 4.85,
+      "feedback_text": "Good quality code, 2 iterations",
+      "would_recommend": true,
+      "timestamp": "2026-04-24T13:47:34.401931"
+    },
+    {
+      "feedback_id": "adf6ab98-c728-4109-9edb-c5311b1a90d2",
+      "task_id": "oh-task-004",
+      "user_id": "anonymous",
+      "satisfaction_score": 4.82,
+      "feedback_text": "Good quality code, 2 iterations",
+      "would_recommend": true,
+      "timestamp": "2026-04-24T13:47:35.404261"
+    },
+    {
+      "feedback_id": "011b0e8f-4dbe-4013-b7e7-4be10503d5d2",
+      "task_id": "oh-task-005",
+      "user_id": "anonymous",
+      "satisfaction_score": 4.73,
+      "feedback_text": "Good quality code, 4 iterations",
+      "would_recommend": true,
+      "timestamp": "2026-04-24T13:47:35.905743"
+    }
+  ],
+  "skill_usages": [
+    {
+      "skill_id": "code_generation",
+      "skill_name": "Code Generation",
+      "task_id": "oh-task-001",
+      "usage_count": 1,
+      "success_count": 1,
+      "avg_duration": 108.0,
+      "timestamp": "2026-04-24T13:47:33.900702"
+    },
+    {
+      "skill_id": "debugging",
+      "skill_name": "Debugging",
+      "task_id": "oh-task-001",
+      "usage_count": 1,
+      "success_count": 1,
+      "avg_duration": 54.0,
+      "timestamp": "2026-04-24T13:47:33.900718"
+    },
+    {
+      "skill_id": "code_generation",
+      "skill_name": "Code Generation",
+      "task_id": "oh-task-002",
+      "usage_count": 1,
+      "success_count": 1,
+      "avg_duration": 72.0,
+      "timestamp": "2026-04-24T13:47:34.401853"
+    },
+    {
+      "skill_id": "debugging",
+      "skill_name": "Debugging",
+      "task_id": "oh-task-002",
+      "usage_count": 1,
+      "success_count": 1,
+      "avg_duration": 36.0,
+      "timestamp": "2026-04-24T13:47:34.401863"
+    },
+    {
+      "skill_id": "code_generation",
+      "skill_name": "Code Generation",
+      "task_id": "oh-task-003",
+      "usage_count": 1,
+      "success_count": 0,
+      "avg_duration": 180.0,
+      "timestamp": "2026-04-24T13:47:34.902924"
+    },
+    {
+      "skill_id": "debugging",
+      "skill_name": "Debugging",
+      "task_id": "oh-task-003",
+      "usage_count": 1,
+      "success_count": 0,
+      "avg_duration": 90.0,
+      "timestamp": "2026-04-24T13:47:34.902935"
+    },
+    {
+      "skill_id": "code_generation",
+      "skill_name": "Code Generation",
+      "task_id": "oh-task-004",
+      "usage_count": 1,
+      "success_count": 1,
+      "avg_duration": 90.0,
+      "timestamp": "2026-04-24T13:47:35.404198"
+    },
+    {
+      "skill_id": "debugging",
+      "skill_name": "Debugging",
+      "task_id": "oh-task-004",
+      "usage_count": 1,
+      "success_count": 1,
+      "avg_duration": 45.0,
+      "timestamp": "2026-04-24T13:47:35.404208"
+    },
+    {
+      "skill_id": "code_generation",
+      "skill_name": "Code Generation",
+      "task_id": "oh-task-005",
+      "usage_count": 1,
+      "success_count": 1,
+      "avg_duration": 144.0,
+      "timestamp": "2026-04-24T13:47:35.905671"
+    },
+    {
+      "skill_id": "debugging",
+      "skill_name": "Debugging",
+      "task_id": "oh-task-005",
+      "usage_count": 1,
+      "success_count": 1,
+      "avg_duration": 72.0,
+      "timestamp": "2026-04-24T13:47:35.905680"
+    }
+  ],
+  "capability_snapshots": [
+    {
+      "snapshot_id": "ad9573f6-3cb1-4e29-9240-e9822106e0cf",
+      "agent_id": "openhands-v1.0",
+      "timestamp": "2026-04-24T13:47:35.906417",
+      "success_rate": 80.0,
+      "efficiency_gain": 99.83,
+      "user_satisfaction": 95.88,
+      "usage_activity": 50,
+      "cost_efficiency": 48.8,
+      "innovation": 83.7,
+      "overall_score": 77.52
+    }
+  ]
+}

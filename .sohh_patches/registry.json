@@ -1,0 +1,63 @@
+{
+  "patches": {
+    "openhands_memory_leak": {
+      "id": "openhands_memory_leak",
+      "description": "修复 OpenHands 内存泄漏问题",
+      "severity": "high",
+      "applicable_versions": [
+        "*"
+      ],
+      "fix_function": "_fix_memory_leak"
+    },
+    "openspace_skill_degradation": {
+      "id": "openspace_skill_degradation",
+      "description": "修复 Skill 质量退化问题",
+      "severity": "medium",
+      "applicable_versions": [
+        "*"
+      ],
+      "fix_function": "_fix_skill_degradation"
+    },
+    "openspace_negative_migration": {
+      "id": "openspace_negative_migration",
+      "description": "防止负迁移问题",
+      "severity": "high",
+      "applicable_versions": [
+        "*"
+      ],
+      "fix_function": "_prevent_negative_migration"
+    },
+    "evolution_death_loop": {
+      "id": "evolution_death_loop",
+      "description": "防止进化死循环",
+      "severity": "critical",
+      "applicable_versions": [
+        "*"
+      ],
+      "fix_function": "_prevent_death_loop"
+    },
+    "pseudo_code_detection": {
+      "id": "pseudo_code_detection",
+      "description": "检测和移除伪代码",
+      "severity": "critical",
+      "applicable_versions": [
+        "*"
+      ],
+      "fix_function": "_detect_pseudo_code"
+    }
+  },
+  "compatibility": {
+    "openhands_memory_leak": [
+      "openspace_skill_degradation"
+    ],
+    "openspace_skill_degradation": [
+      "openspace_negative_migration"
+    ],
+    "openspace_negative_migration": [
+      "evolution_death_loop"
+    ],
+    "evolution_death_loop": [],
+    "pseudo_code_detection": []
+  },
+  "updated": "2026-04-24T08:59:54.427466"
+}

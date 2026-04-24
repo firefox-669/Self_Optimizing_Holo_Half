@@ -1,0 +1,650 @@
+{
+  "openhands_info": [
+    {
+      "source": "openhands",
+      "type": "commits",
+      "title": "",
+      "sha": "fb98faf",
+      "url": "https://github.com/OpenHands/OpenHands/commit/fb98faf4acc8afb2df65db06053328c4dc43a637",
+      "date": "2026-04-23T23:09:46Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:58.881496"
+    },
+    {
+      "source": "openhands",
+      "type": "commits",
+      "title": "",
+      "sha": "a8f62aa",
+      "url": "https://github.com/OpenHands/OpenHands/commit/a8f62aa30c57c0493878e0e3e1c51a01cd41d12c",
+      "date": "2026-04-23T22:23:31Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:58.881521"
+    },
+    {
+      "source": "openhands",
+      "type": "commits",
+      "title": "",
+      "sha": "1a7449b",
+      "url": "https://github.com/OpenHands/OpenHands/commit/1a7449b03ac133e30d4500fb6575a9f96d6616e6",
+      "date": "2026-04-23T19:42:40Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:58.881532"
+    },
+    {
+      "source": "openhands",
+      "type": "commits",
+      "title": "",
+      "sha": "1091901",
+      "url": "https://github.com/OpenHands/OpenHands/commit/1091901be206279bdb755065f72c6f4f415fb3ec",
+      "date": "2026-04-23T18:53:37Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:58.881542"
+    },
+    {
+      "source": "openhands",
+      "type": "commits",
+      "title": "",
+      "sha": "15160f6",
+      "url": "https://github.com/OpenHands/OpenHands/commit/15160f673335ed98ecb105f15e8d2c495f2c2dbe",
+      "date": "2026-04-23T16:52:43Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:58.881551"
+    },
+    {
+      "source": "openhands",
+      "type": "releases",
+      "title": "1.6.0 - 2026-03-30",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/releases/tag/1.6.0",
+      "date": "2026-03-30T14:20:58Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:59.635031"
+    },
+    {
+      "source": "openhands",
+      "type": "releases",
+      "title": "1.5.0 - 2026-03-11",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/releases/tag/1.5.0",
+      "date": "2026-03-10T21:00:51Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:59.635046"
+    },
+    {
+      "source": "openhands",
+      "type": "releases",
+      "title": "1.4.0 - 2026-02-17",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/releases/tag/1.4.0",
+      "date": "2026-02-17T14:15:14Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:59.635053"
+    },
+    {
+      "source": "openhands",
+      "type": "releases",
+      "title": "1.3.0 - 2026-02-02",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/releases/tag/1.3.0",
+      "date": "2026-02-02T16:05:29Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:59.635058"
+    },
+    {
+      "source": "openhands",
+      "type": "releases",
+      "title": "1.2.1 - 2026-01-16",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/releases/tag/1.2.1",
+      "date": "2026-01-15T21:32:50Z",
+      "author": "",
+      "detected_at": "2026-04-24T08:59:59.635064"
+    },
+    {
+      "source": "openhands",
+      "type": "pulls",
+      "title": "fix: register GitlabV1CallbackProcessor for deserialization",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14108",
+      "date": "2026-04-23T22:04:25Z",
+      "author": "aivong-openhands",
+      "detected_at": "2026-04-24T09:00:00.673460"
+    },
+    {
+      "source": "openhands",
+      "type": "pulls",
+      "title": "refactor: remove external dependencies on V0 packages (controller, memory, microagent)",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14106",
+      "date": "2026-04-23T21:00:24Z",
+      "author": "tofarr",
+      "detected_at": "2026-04-24T09:00:00.673489"
+    },
+    {
+      "source": "openhands",
+      "type": "pulls",
+      "title": "Remove dead code.",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14103",
+      "date": "2026-04-23T18:19:23Z",
+      "author": "tofarr",
+      "detected_at": "2026-04-24T09:00:00.673499"
+    },
+    {
+      "source": "openhands",
+      "type": "pulls",
+      "title": "Fix: Register SetTitleCallbackProcessor for webhook-created conversations",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14102",
+      "date": "2026-04-23T18:18:05Z",
+      "author": "malhotra5",
+      "detected_at": "2026-04-24T09:00:00.673510"
+    },
+    {
+      "source": "openhands",
+      "type": "pulls",
+      "title": "fix(frontend): show members a read-only badge on org-defaults pages",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14098",
+      "date": "2026-04-23T16:17:39Z",
+      "author": "hieptl",
+      "detected_at": "2026-04-24T09:00:00.673519"
+    },
+    {
+      "source": "openhands",
+      "type": "issues",
+      "title": "APP-1325: register GitlabV1CallbackProcessor for deserialization",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14110",
+      "date": "2026-04-23T22:21:58Z",
+      "author": "aivong-openhands",
+      "detected_at": "2026-04-24T09:00:01.508163"
+    },
+    {
+      "source": "openhands",
+      "type": "issues",
+      "title": "ci: run PR review on fork PRs",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14109",
+      "date": "2026-04-23T22:06:48Z",
+      "author": "enyst",
+      "detected_at": "2026-04-24T09:00:01.508192"
+    },
+    {
+      "source": "openhands",
+      "type": "issues",
+      "title": "GitlabV1CallbackProcessor not registered for deserialization in webhook router",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/issues/14107",
+      "date": "2026-04-23T22:00:16Z",
+      "author": "aivong-openhands",
+      "detected_at": "2026-04-24T09:00:01.508206"
+    },
+    {
+      "source": "openhands",
+      "type": "issues",
+      "title": "fix(frontend): allow send when only attachments are present",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14105",
+      "date": "2026-04-23T19:06:56Z",
+      "author": "he-yufeng",
+      "detected_at": "2026-04-24T09:00:01.508219"
+    },
+    {
+      "source": "openhands",
+      "type": "issues",
+      "title": "fix(frontend): restore think title fallback",
+      "sha": "",
+      "url": "https://github.com/OpenHands/OpenHands/pull/14104",
+      "date": "2026-04-23T18:25:03Z",
+      "author": "kayametehan",
+      "detected_at": "2026-04-24T09:00:01.508231"
+    }
+  ],
+  "openspace_info": [
+    {
+      "source": "openspace",
+      "type": "commits",
+      "title": "",
+      "sha": "d1e367d",
+      "url": "https://github.com/HKUDS/OpenSpace/commit/d1e367d0ed4722d67f1f3b95d816ba4a959288d2",
+      "date": "2026-04-16T14:07:26Z",
+      "author": "",
+      "detected_at": "2026-04-24T09:00:06.848440"
+    },
+    {
+      "source": "openspace",
+      "type": "commits",
+      "title": "",
+      "sha": "020a879",
+      "url": "https://github.com/HKUDS/OpenSpace/commit/020a87994492b9a82c44e8e1e3206e5ed8f7496c",
+      "date": "2026-04-16T14:04:22Z",
+      "author": "",
+      "detected_at": "2026-04-24T09:00:06.848463"
+    },
+    {
+      "source": "openspace",
+      "type": "commits",
+      "title": "",
+      "sha": "21fb98b",
+      "url": "https://github.com/HKUDS/OpenSpace/commit/21fb98bb362f72761a1a0165b3fd14c9743ee94e",
+      "date": "2026-04-16T12:33:10Z",
+      "author": "",
+      "detected_at": "2026-04-24T09:00:06.848474"
+    },
+    {
+      "source": "openspace",
+      "type": "commits",
+      "title": "",
+      "sha": "59095d5",
+      "url": "https://github.com/HKUDS/OpenSpace/commit/59095d52c2897e9535769e1ac3c71e915ff6f3f7",
+      "date": "2026-04-16T12:31:26Z",
+      "author": "",
+      "detected_at": "2026-04-24T09:00:06.848482"
+    },
+    {
+      "source": "openspace",
+      "type": "commits",
+      "title": "",
+      "sha": "22d6864",
+      "url": "https://github.com/HKUDS/OpenSpace/commit/22d6864df2024806c6e9895462ad9279e21d1599",
+      "date": "2026-04-12T06:13:01Z",
+      "author": "",
+      "detected_at": "2026-04-24T09:00:06.848491"
+    },
+    {
+      "source": "openspace",
+      "type": "pulls",
+      "title": "feat(llm): add stream mode support for OpenAI-compatible proxies",
+      "sha": "",
+      "url": "https://github.com/HKUDS/OpenSpace/pull/79",
+      "date": "2026-04-12T10:14:48Z",
+      "author": "kobeng",
+      "detected_at": "2026-04-24T09:00:10.631918"
+    },
+    {
+      "source": "openspace",
+      "type": "pulls",
+      "title": "fix: resolve macOS dependency conflict in extras",
+      "sha": "",
+      "url": "https://github.com/HKUDS/OpenSpace/pull/78",
+      "date": "2026-04-12T06:29:52Z",
+      "author": "liyikradlee",
+      "detected_at": "2026-04-24T09:00:10.631944"
+    },
+    {
+      "source": "openspace",
+      "type": "pulls",
+      "title": "feat: add Hermes Agent as third supported host agent",
+      "sha": "",
+      "url": "https://github.com/HKUDS/OpenSpace/pull/76",
+      "date": "2026-04-10T08:25:56Z",
+      "author": "tianhaocui",
+      "detected_at": "2026-04-24T09:00:10.631954"
+    },
+    {
+      "source": "openspace",
+      "type": "pulls",
+      "title": "Fix cloud visibility compatibility",
+      "sha": "",
+      "url": "https://github.com/HKUDS/OpenSpace/pull/75",
+      "date": "2026-04-09T14:37:04Z",
+      "author": "Dennis-yxchen",
+      "detected_at": "2026-04-24T09:00:10.631963"
+    },
+    {
+      "source": "openspace",
+      "type": "pulls",
+      "title": "feat: add communication gateway and channel adapters",
+      "sha": "",
+      "url": "https://github.com/HKUDS/OpenSpace/pull/74",
+      "date": "2026-04-09T14:06:33Z",
+      "author": "xlrrrr",
+      "detected_at": "2026-04-24T09:00:10.631972"
+    }
+  ],
+  "ai_trends": [
+    {
+      "source": "ai_trends",
+      "type": "repo",
+      "category": "GitHub Trending",
+      "title": "vercel/ai",
+      "description": "The AI Toolkit for TypeScript. From the creators of Next.js, the AI SDK is a free open-source library for building AI-powered applications and agents ",
+      "stars": 23743,
+      "url": "https://github.com/vercel/ai",
+      "detected_at": "2026-04-24T09:00:30.027251"
+    },
+    {
+      "source": "ai_trends",
+      "type": "repo",
+      "category": "GitHub Trending",
+      "title": "activepieces/activepieces",
+      "description": "AI Agents & MCPs & AI Workflow Automation • (~400 MCP servers for AI agents) • AI Automation / AI Agent with MCPs • AI Workflows & AI Agents • MCPs for AI Agents",
+      "stars": 21836,
+      "url": "https://github.com/activepieces/activepieces",
+      "detected_at": "2026-04-24T09:00:30.027274"
+    },
+    {
+      "source": "ai_trends",
+      "type": "repo",
+      "category": "GitHub Trending",
+      "title": "FlowiseAI/Flowise",
+      "description": "Build AI Agents, Visually",
+      "stars": 52211,
+      "url": "https://github.com/FlowiseAI/Flowise",
+      "detected_at": "2026-04-24T09:00:30.027281"
+    },
+    {
+      "source": "ai_trends",
+      "type": "repo",
+      "category": "GitHub Trending",
+      "title": "microsoft/ai-agents-for-beginners",
+      "description": "12 Lessons to Get Started Building AI Agents",
+      "stars": 58790,
+      "url": "https://github.com/microsoft/ai-agents-for-beginners",
+      "detected_at": "2026-04-24T09:00:30.027288"
+    },
+    {
+      "source": "ai_trends",
+      "type": "repo",
+      "category": "GitHub Trending",
+      "title": "reworkd/AgentGPT",
+      "description": "🤖 Assemble, configure, and deploy autonomous AI Agents in your browser.",
+      "stars": 36021,
+      "url": "https://github.com/reworkd/AgentGPT",
+      "detected_at": "2026-04-24T09:00:30.027294"
+    }
+  ],
+  "improvements": [
+    {
+      "target": "both",
+      "type": "new_capability",
+      "improvement": "microsoft/ai-agents-for-beginners",
+      "source_info": {
+        "source": "ai_trends",
+        "type": "repo",
+        "category": "GitHub Trending",
+        "title": "microsoft/ai-agents-for-beginners",
+        "description": "12 Lessons to Get Started Building AI Agents",
+        "stars": 58790,
+        "url": "https://github.com/microsoft/ai-agents-for-beginners",
+        "detected_at": "2026-04-24T09:00:30.027288"
+      },
+      "category": "extension",
+      "priority": 0.9
+    },
+    {
+      "target": "both",
+      "type": "new_capability",
+      "improvement": "reworkd/AgentGPT",
+      "source_info": {
+        "source": "ai_trends",
+        "type": "repo",
+        "category": "GitHub Trending",
+        "title": "reworkd/AgentGPT",
+        "description": "🤖 Assemble, configure, and deploy autonomous AI Agents in your browser.",
+        "stars": 36021,
+        "url": "https://github.com/reworkd/AgentGPT",
+        "detected_at": "2026-04-24T09:00:30.027294"
+      },
+      "category": "extension",
+      "priority": 0.9
+    },
+    {
+      "target": "openhands",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openhands",
+        "type": "commits",
+        "title": "",
+        "sha": "fb98faf",
+        "url": "https://github.com/OpenHands/OpenHands/commit/fb98faf4acc8afb2df65db06053328c4dc43a637",
+        "date": "2026-04-23T23:09:46Z",
+        "author": "",
+        "detected_at": "2026-04-24T08:59:58.881496"
+      },
+      "category": "execution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openhands",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openhands",
+        "type": "commits",
+        "title": "",
+        "sha": "a8f62aa",
+        "url": "https://github.com/OpenHands/OpenHands/commit/a8f62aa30c57c0493878e0e3e1c51a01cd41d12c",
+        "date": "2026-04-23T22:23:31Z",
+        "author": "",
+        "detected_at": "2026-04-24T08:59:58.881521"
+      },
+      "category": "execution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openhands",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openhands",
+        "type": "commits",
+        "title": "",
+        "sha": "1a7449b",
+        "url": "https://github.com/OpenHands/OpenHands/commit/1a7449b03ac133e30d4500fb6575a9f96d6616e6",
+        "date": "2026-04-23T19:42:40Z",
+        "author": "",
+        "detected_at": "2026-04-24T08:59:58.881532"
+      },
+      "category": "execution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openhands",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openhands",
+        "type": "commits",
+        "title": "",
+        "sha": "1091901",
+        "url": "https://github.com/OpenHands/OpenHands/commit/1091901be206279bdb755065f72c6f4f415fb3ec",
+        "date": "2026-04-23T18:53:37Z",
+        "author": "",
+        "detected_at": "2026-04-24T08:59:58.881542"
+      },
+      "category": "execution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openhands",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openhands",
+        "type": "commits",
+        "title": "",
+        "sha": "15160f6",
+        "url": "https://github.com/OpenHands/OpenHands/commit/15160f673335ed98ecb105f15e8d2c495f2c2dbe",
+        "date": "2026-04-23T16:52:43Z",
+        "author": "",
+        "detected_at": "2026-04-24T08:59:58.881551"
+      },
+      "category": "execution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openspace",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openspace",
+        "type": "commits",
+        "title": "",
+        "sha": "d1e367d",
+        "url": "https://github.com/HKUDS/OpenSpace/commit/d1e367d0ed4722d67f1f3b95d816ba4a959288d2",
+        "date": "2026-04-16T14:07:26Z",
+        "author": "",
+        "detected_at": "2026-04-24T09:00:06.848440"
+      },
+      "category": "evolution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openspace",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openspace",
+        "type": "commits",
+        "title": "",
+        "sha": "020a879",
+        "url": "https://github.com/HKUDS/OpenSpace/commit/020a87994492b9a82c44e8e1e3206e5ed8f7496c",
+        "date": "2026-04-16T14:04:22Z",
+        "author": "",
+        "detected_at": "2026-04-24T09:00:06.848463"
+      },
+      "category": "evolution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openspace",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openspace",
+        "type": "commits",
+        "title": "",
+        "sha": "21fb98b",
+        "url": "https://github.com/HKUDS/OpenSpace/commit/21fb98bb362f72761a1a0165b3fd14c9743ee94e",
+        "date": "2026-04-16T12:33:10Z",
+        "author": "",
+        "detected_at": "2026-04-24T09:00:06.848474"
+      },
+      "category": "evolution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openspace",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openspace",
+        "type": "commits",
+        "title": "",
+        "sha": "59095d5",
+        "url": "https://github.com/HKUDS/OpenSpace/commit/59095d52c2897e9535769e1ac3c71e915ff6f3f7",
+        "date": "2026-04-16T12:31:26Z",
+        "author": "",
+        "detected_at": "2026-04-24T09:00:06.848482"
+      },
+      "category": "evolution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openspace",
+      "type": "feature_enhancement",
+      "improvement": "",
+      "source_info": {
+        "source": "openspace",
+        "type": "commits",
+        "title": "",
+        "sha": "22d6864",
+        "url": "https://github.com/HKUDS/OpenSpace/commit/22d6864df2024806c6e9895462ad9279e21d1599",
+        "date": "2026-04-12T06:13:01Z",
+        "author": "",
+        "detected_at": "2026-04-24T09:00:06.848491"
+      },
+      "category": "evolution",
+      "priority": 0.7999999999999999
+    },
+    {
+      "target": "openhands",
+      "type": "new_feature",
+      "improvement": "fix: register GitlabV1CallbackProcessor for deserialization",
+      "source_info": {
+        "source": "openhands",
+        "type": "pulls",
+        "title": "fix: register GitlabV1CallbackProcessor for deserialization",
+        "sha": "",
+        "url": "https://github.com/OpenHands/OpenHands/pull/14108",
+        "date": "2026-04-23T22:04:25Z",
+        "author": "aivong-openhands",
+        "detected_at": "2026-04-24T09:00:00.673460"
+      },
+      "category": "extension",
+      "priority": 0.7
+    },
+    {
+      "target": "openhands",
+      "type": "new_feature",
+      "improvement": "refactor: remove external dependencies on V0 packages (controller, memory, microagent)",
+      "source_info": {
+        "source": "openhands",
+        "type": "pulls",
+        "title": "refactor: remove external dependencies on V0 packages (controller, memory, microagent)",
+        "sha": "",
+        "url": "https://github.com/OpenHands/OpenHands/pull/14106",
+        "date": "2026-04-23T21:00:24Z",
+        "author": "tofarr",
+        "detected_at": "2026-04-24T09:00:00.673489"
+      },
+      "category": "extension",
+      "priority": 0.7
+    },
+    {
+      "target": "openhands",
+      "type": "new_feature",
+      "improvement": "Remove dead code.",
+      "source_info": {
+        "source": "openhands",
+        "type": "pulls",
+        "title": "Remove dead code.",
+        "sha": "",
+        "url": "https://github.com/OpenHands/OpenHands/pull/14103",
+        "date": "2026-04-23T18:19:23Z",
+        "author": "tofarr",
+        "detected_at": "2026-04-24T09:00:00.673499"
+      },
+      "category": "extension",
+      "priority": 0.7
+    },
+    {
+      "target": "openhands",
+      "type": "new_feature",
+      "improvement": "Fix: Register SetTitleCallbackProcessor for webhook-created conversations",
+      "source_info": {
+        "source": "openhands",
+        "type": "pulls",
+        "title": "Fix: Register SetTitleCallbackProcessor for webhook-created conversations",
+        "sha": "",
+        "url": "https://github.com/OpenHands/OpenHands/pull/14102",
+        "date": "2026-04-23T18:18:05Z",
+        "author": "malhotra5",
+        "detected_at": "2026-04-24T09:00:00.673510"
+      },
+      "category": "extension",
+      "priority": 0.7
+    },
+    {
+      "target": "openhands",
+      "type": "new_feature",
+      "improvement": "fix(frontend): show members a read-only badge on org-defaults pages",
+      "source_info": {
+        "source": "openhands",
+        "type": "pulls",
+        "title": "fix(frontend): show members a read-only badge on org-defaults pages",
+        "sha": "",
+        "url": "https://github.com/OpenHands/OpenHands/pull/14098",
+        "date": "2026-04-23T16:17:39Z",
+        "author": "hieptl",
+        "detected_at": "2026-04-24T09:00:00.673519"
+      },
+      "category": "extension",
+      "priority": 0.7
+    }
+  ],
+  "updated": "2026-04-24T09:01:41.387399"
+}
