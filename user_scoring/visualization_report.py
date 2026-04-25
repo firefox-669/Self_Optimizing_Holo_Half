@@ -985,7 +985,7 @@ class VisualizationReportGenerator:
 </html>
 """
         
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, 'w', encoding='utf-8-sig') as f:
             # 1. 构造轨迹数据字典
             trace_dict = {}
             for task in task_details:
