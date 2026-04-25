@@ -347,7 +347,8 @@ class SOHHDataCollector:
                  tokens_used: int = 0, cost: float = 0.0,
                  iterations: int = 0, error_message: str = None,
                  code_quality_score: float = None,
-                 test_pass_rate: float = None) -> None:
+                 test_pass_rate: float = None,
+                 metadata: Dict[str, Any] = None) -> None:
         """
         记录任务结束
         
@@ -360,6 +361,7 @@ class SOHHDataCollector:
             error_message: 错误信息（如果失败）
             code_quality_score: 代码质量评分 0-1
             test_pass_rate: 测试通过率 0-1
+            metadata: 额外元数据
         """
         for execution in self.task_executions:
             if execution.task_id == task_id:
@@ -373,6 +375,8 @@ class SOHHDataCollector:
                 execution.error_message = error_message
                 execution.code_quality_score = code_quality_score
                 execution.test_pass_rate = test_pass_rate
+                if metadata:
+                    execution.metadata.update(metadata)
                 break
     
     def record_feedback(self, task_id: str, satisfaction_score: float,
@@ -493,18 +497,34 @@ class SOHHDataCollector:
         self.capability_snapshots.append(snapshot)
         return snapshot
     
-    def submit_to_sohh(self, db_path: str = "data/holo_half.db") -> Dict:
+    def submit_to_sohh(self, db_path: str = "data/holo_half.db", trace_source_path: str = None) -> Dict:
         """
         提交数据到 SOHH 数据库
         
         Args:
             db_path: SOHH 数据库路径
+            trace_source_path: 执行链路日志的路径（如 OpenSpace 的 recordings 目录）
             
         Returns:
             提交结果统计
         """
         import sqlite3
         from pathlib import Path
+        
+        # 1. 尝试加载插件并采集链路数据
+        execution_traces = []
+        if trace_source_path and Path(trace_source_path).exists():
+            try:
+                from plugins.openspace_analyzer import OpenSpaceAnalyzer
+                analyzer = OpenSpaceAnalyzer()
+                if analyzer.is_compatible(trace_source_path):
+                    print(f"🔍 检测到兼容框架，正在解析链路: {trace_source_path}")
+                    steps = analyzer.collect_trace(trace_source_path)
+                    metrics = analyzer.analyze_metrics(steps)
+                    print(f"✅ 链路解析成功: {metrics['total_steps']} 步")
+                    execution_traces = steps
+            except ImportError:
+                print("⚠️  插件模块未找到，跳过链路采集")
         
         db_path = Path(db_path)
         db_path.parent.mkdir(parents=True, exist_ok=True)
@@ -595,6 +615,25 @@ class SOHHDataCollector:
                 except Exception as e:
                     print(f"⚠️  插入任务记录（报告用）失败: {e}")
             
+            # 插入执行轨迹 (v2.1 新增)
+            traces_inserted = 0
+            if execution_traces:
+                # 简单起见，我们将所有步骤关联到最近的一个任务 ID
+                last_task_id = self.task_executions[-1].task_id if self.task_executions else "unknown"
+                for step in execution_traces:
+                    try:
+                        cursor.execute("""
+                            INSERT INTO execution_traces 
+                            (task_id, step_id, timestamp, step_type, content, metadata_json)
+                            VALUES (?, ?, ?, ?, ?, ?)
+                        """, (
+                            last_task_id, step.step_id, step.timestamp, 
+                            step.step_type, step.content[:500], json.dumps(step.metadata) # 限制内容长度
+                        ))
+                        traces_inserted += 1
+                    except Exception as e:
+                        print(f"⚠️  插入轨迹步骤失败: {e}")
+            
             conn.commit()
             
             result = {
@@ -603,6 +642,7 @@ class SOHHDataCollector:
                 'feedbacks_inserted': feedbacks_inserted,
                 'snapshots_inserted': snapshots_inserted,
                 'tasks_records_inserted': tasks_records_inserted,
+                'traces_inserted': traces_inserted,
                 'db_path': str(db_path)
             }
             
@@ -611,6 +651,7 @@ class SOHHDataCollector:
             print(f"   用户反馈: {feedbacks_inserted}")
             print(f"   能力快照: {snapshots_inserted}")
             print(f"   报告任务清单: {tasks_records_inserted}")
+            print(f"   执行轨迹步骤: {traces_inserted}")
             print(f"   数据库: {db_path}")
             
             return result
@@ -703,6 +744,20 @@ class SOHHDataCollector:
                 iterations INTEGER DEFAULT 0,
                 error_message TEXT,
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        # 执行轨迹表 (v2.1 新增 - 存储标准化步骤)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS execution_traces (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                step_id INTEGER NOT NULL,
+                timestamp REAL,
+                step_type TEXT,
+                content TEXT,
+                metadata_json TEXT,
+                FOREIGN KEY (task_id) REFERENCES task_records(task_id)
             )
         """)
     

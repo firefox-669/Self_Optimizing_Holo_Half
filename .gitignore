@@ -4,42 +4,27 @@ __pycache__/
 *$py.class
 *.so
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual environments
+env/
 venv/
 ENV/
-env/
-.venv/
 
-# Database
-data/*.db
-data/*.sqlite
-data/*.sqlite3
-
-# Logs
-data/logs/
-*.log
+# SOHH Runtime
+.sohh_cache/
+.sohh_evolution/
+.sohh_patches/
 logs/
+reports/*.html
+*.db
 
-# Environment variables
-.env
-.env.local
-.env.production
+# Test & Temp files
+gen_openspace_report.py
+check_db.py
+test_*.py
+fibonacci.py
+index.html
+person
+secret_code
+xxx/
 
 # IDE
 .vscode/
@@ -51,61 +36,3 @@ logs/
 # OS
 .DS_Store
 Thumbs.db
-desktop.ini
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Distribution / packaging
-*.tar.gz
-*.zip
-*.whl
-
-# Temporary files
-tmp/
-temp/
-*.tmp
-
-# Documentation build (if using Sphinx)
-docs/_build/
-
-# Local configuration
-config.local.yaml
-*.local.yaml
-
-# Internal analysis documents (excluded - too large for initial commit)
-ARCHITECTURE_LIMITATIONS.md          # 72KB - 架构缺陷分析
-ARCHITECTURE_LIMITATION_MODIFY.md    # 429KB - 改进方案
-REAL_MATCH_REPORT.md                 # 文章匹配度报告
-VERIFY_ARTICLE_MATCH.md              # 验证文档
-ARTICLE_CLAIMS_FULFILLMENT.md        # 承诺兑现报告
-
-# Development and deployment scripts (not needed for end users)
-cleanup_before_commit.bat              # 开发用清理脚本
-config_evolution.py                    # 配置演化脚本（可能包含敏感信息）
-deploy.py                              # 部署脚本（可能包含服务器配置）
-
-# Old/example files (superseded by demo.py and examples/)
-example.py                             # 旧示例文件，已被 demo.py 替代
-
-# Test and validation scripts (useful for development but optional for release)
-check_syntax.py                        # 语法检查工具
-test_engine.py                         # 引擎测试
-GITHUB_READY_CHECKLIST.md              # GitHub 提交检查清单
-GIT_SAFETY_CHECKLIST.md                # Git 安全检查清单
-RELEASE_CHECKLIST.md                   # 发布检查清单
-COMPLETION_REPORT.md                   # 完成报告
-IMPLEMENTATION_PLAN.md                 # 实现计划（超大文件 76KB）
-IMPLEMENTATION_PROGRESS.md             # 实现进度
-
-# Self_Optimizing_Holo_Evolution directory (separate project)
-../Self_Optimizing_Holo_Evolution/
-
-# SOHH subdirectory (should not exist)
-SOHH/

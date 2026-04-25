@@ -83,6 +83,7 @@ def init_db(db_path: str = None):
             CREATE TABLE IF NOT EXISTS task_executions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 task_id TEXT UNIQUE NOT NULL,
+                agent_id TEXT,
                 user_id TEXT,
                 mode TEXT NOT NULL,  -- 'normal' or 'evolution'
                 task_type TEXT,      -- 'openhands' or 'openspace'
@@ -184,6 +185,26 @@ def init_db(db_path: str = None):
                 timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
+        
+        # 8. 执行轨迹表 (v2.1 新增 - 存储标准化步骤)
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS execution_traces (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_id TEXT NOT NULL,
+                step_id INTEGER NOT NULL,
+                timestamp REAL,
+                step_type TEXT,
+                content TEXT,
+                metadata_json TEXT,
+                FOREIGN KEY (task_id) REFERENCES task_records(task_id)
+            )
+        """)
+        
+        # 9. 数据库迁移 (Migration): 为旧表增加 agent_id
+        try:
+            db.execute("ALTER TABLE task_executions ADD COLUMN agent_id TEXT")
+        except sqlite3.OperationalError:
+            pass # 列已存在
         
         # 创建索引以提升查询性能
         db.execute("CREATE INDEX IF NOT EXISTS idx_task_executions_user ON task_executions(user_id)")

@@ -33,12 +33,18 @@ async def run_real_openspace_benchmark():
         from dotenv import load_dotenv
         load_dotenv() # 加载 .env 文件
         
+        # 确保日志目录存在且不会被清理
+        log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "logs", "recordings"))
+        os.makedirs(log_dir, exist_ok=True)
+        
         config = OpenSpaceConfig(
-            llm_model="openai/minimax-m25", # 添加 openai/ 前缀以适配 LiteLLM
+            llm_model="openai/minimax-m25",
             llm_kwargs={
                 "base_url": os.getenv("OPENAI_BASE_URL"),
                 "api_key": os.getenv("OPENAI_API_KEY")
-            }
+            },
+            recording_backends=["shell", "mcp", "system"],
+            recording_log_dir=log_dir  # 显式指定录制目录
         )
         agent = OpenSpace(config=config)
         
@@ -61,12 +67,24 @@ async def run_real_openspace_benchmark():
                 status = result.get('status', 'unknown')
                 success = (status == 'success')
                 
-                # [接入点 2] 记录任务结束
+                # 获取 OpenSpace 的真实任务 ID 和日志路径
+                real_task_id = result.get('task_id', '')
+                log_path = ""
+                if real_task_id:
+                    # 尝试在 recordings 目录下寻找对应的文件夹
+                    base_log_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "logs", "recordings"))
+                    for d in os.listdir(base_log_dir):
+                        if real_task_id in d:
+                            log_path = os.path.join(base_log_dir, d)
+                            break
+                
+                # [接入点 2] 记录任务结束，并附带真实日志路径
                 collector.end_task(
                     task_id=task_id,
                     success=success,
                     iterations=result.get('iterations', 0),
-                    error_message=result.get('error') if not success else None
+                    error_message=result.get('error') if not success else None,
+                    metadata={'real_task_id': real_task_id, 'log_path': log_path}
                 )
                 
                 print(f"   ✅ 任务完成 (状态: {status}, 耗时: {duration:.2f}s)")
@@ -78,8 +96,16 @@ async def run_real_openspace_benchmark():
         
         # 4. 提交所有数据到 SOHH 数据库
         db_path = os.path.join(os.path.dirname(__file__), "data", "holo_half.db")
-        collector.submit_to_sohh(db_path=db_path)
-        print(f"\n✅ 真实测试数据已同步至 SOHH 数据库!")
+        
+        # 尝试寻找 OpenSpace 的日志目录
+        log_dir = os.path.join(os.path.dirname(__file__), "..", "logs", "recordings")
+        if not os.path.exists(log_dir):
+            # 备选路径：当前目录下的 logs
+            log_dir = os.path.join(os.path.dirname(__file__), "logs", "recordings")
+            
+        print(f"\n🔍 正在查找链路日志: {log_dir}")
+        collector.submit_to_sohh(db_path=db_path, trace_source_path=log_dir)
+        print(f"✅ 真实测试数据已同步至 SOHH 数据库!")
         
     except ImportError:
         print("⚠️  未找到 openspace 模块，请确保在正确的环境下运行。")
