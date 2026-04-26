@@ -79,7 +79,7 @@ LLM_MODEL=openai/minimax-m25
 python run_openspace_benchmark.py
 ```
 
-这将自动执行 3 个标准任务（斐波那契数列、HTML 按钮生成、代码重构），并将结果存入 SQLite 数据库。
+这将自动执行 15 个多样化任务（涵盖简单、中等、复杂难度），并将结果存入 SQLite 数据库。
 
 ### 4️⃣ 生成评估报告
 
