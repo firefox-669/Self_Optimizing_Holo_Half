@@ -28,12 +28,15 @@ person
 secret_code
 xxx/
 check_*.py
+
+# Internal Documentation
 *_draft.md
 *_template.*
 *CHECKLIST.md
 *SUMMARY.md
-REFERENCE.md
-SUBMISSION_*
+*REFERENCE.md
+*SUBMISSION_*
+FINAL_*
 *.bat
 auto_submit_pipeline.py
 download_file.py
