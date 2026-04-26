@@ -53,7 +53,7 @@ class OpenSpaceAnalyzer(BaseAnalyzer):
                         steps.append(ExecutionStep(
                             step_id=global_step_id,
                             timestamp=meta.get('start_time', 0),
-                            step_type="👤 用户指令",
+                            step_type="User Instruction",
                             content=task_desc,
                             metadata={'source_file': 'metadata.json'}
                         ))
@@ -93,7 +93,7 @@ class OpenSpaceAnalyzer(BaseAnalyzer):
                                 
                             global_step_id += 1
                             role = event['role']
-                            step_type = "[Agent] 思考" if role == 'assistant' else ("[User] 指令" if role == 'user' else "[Tool] 返回")
+                            step_type = "Agent Thought" if role == 'assistant' else ("User Input" if role == 'user' else "Tool Response")
                             steps.append(ExecutionStep(
                                 step_id=global_step_id,
                                 timestamp=event.get('timestamp', 0),
@@ -122,7 +122,7 @@ class OpenSpaceAnalyzer(BaseAnalyzer):
                                         steps.append(ExecutionStep(
                                             step_id=global_step_id,
                                             timestamp=event.get('timestamp', 0),
-                                            step_type=f"[Tool] 调用: {func_name}",
+                                            step_type=f"Tool Call: {func_name}",
                                             content=step_content[:2000],
                                             metadata={'source_file': str(jf.name)}
                                         ))
@@ -131,7 +131,7 @@ class OpenSpaceAnalyzer(BaseAnalyzer):
                                 # 处理普通文本内容（不再过滤错误信息，保留完整的反馈闭环）
                                 if content.strip():
                                     global_step_id += 1
-                                    step_type = "[Agent] 思考" if role == 'assistant' else ("[User] 指令" if role == 'user' else "[Tool] 返回")
+                                    step_type = "Agent Thought" if role == 'assistant' else ("User Input" if role == 'user' else "Tool Response")
                                     steps.append(ExecutionStep(
                                         step_id=global_step_id,
                                         timestamp=event.get('timestamp', 0),
@@ -149,7 +149,7 @@ class OpenSpaceAnalyzer(BaseAnalyzer):
                             steps.append(ExecutionStep(
                                 step_id=global_step_id,
                                 timestamp=event.get('timestamp', 0),
-                                step_type=f"[Action] {action}",
+                                step_type=f"Action: {action}",
                                 content=str(event)[:300],
                                 metadata={'source_file': str(jf.name)}
                             ))

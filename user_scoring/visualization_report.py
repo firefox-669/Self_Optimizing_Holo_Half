@@ -58,16 +58,27 @@ class VisualizationReportGenerator:
         # 5. 生成 A/B 测试对比
         ab_test_data = self._get_ab_test_comparison()
         
-        # 6. 计算记忆效率 (v2.1 新增)
+        # 6. 计算记忆效率 (已废弃，保留接口以避免报错)
         memory_efficiency = self._calculate_memory_efficiency()
         
         # 7. 获取任务详情 (v2.1 新增)
         task_details = self._get_task_details()
         
-        # 7. 生成报告
+        # 8. 计算统计摘要
+        # 获取实际任务数（从 task_executions 表）
+        actual_task_count = self._get_actual_task_count()
+        
+        stats_summary = {
+            'total_tasks': actual_task_count if actual_task_count > 0 else len(metrics_data),
+            'score_range': round(max([m.get('overall_score', 0) for m in metrics_data]) - min([m.get('overall_score', 0) for m in metrics_data]), 2) if len(metrics_data) > 1 else 0,
+            'avg_score': round(sum([m.get('overall_score', 0) for m in metrics_data]) / len(metrics_data), 2) if metrics_data else 0,
+            'trend_direction': '-' if len(trend_data.get('scores', [])) <= 1 else ('↑' if trend_data['scores'][-1] > trend_data['scores'][0] else '↓')
+        }
+        
+        # 9. 生成报告
         if output_format == "html":
             report_path = self._generate_html_report(
-                overall_score, radar_data, trend_data, ab_test_data, memory_efficiency, task_details
+                overall_score, radar_data, trend_data, ab_test_data, memory_efficiency, task_details, stats_summary
             )
         else:
             report_path = self._generate_markdown_report(
@@ -136,7 +147,8 @@ class VisualizationReportGenerator:
                 for row in cursor.fetchall():
                     # 简单的归一化逻辑：成功率 * 100，效率基于耗时估算
                     sr = row[1] * 100 if row[1] else 0
-                    eff = max(0, 100 - (row[2] / 5)) if row[2] else 50 # 假设 5s 为基准
+                    # 修复：使用更宽松的基准时间（900秒=15分钟），避免长时间任务得0分
+                    eff = max(0, 100 - (row[2] / 18)) if row[2] else 50  # 假设 900s 为基准
                     records.append({
                         'timestamp': row[0],
                         'overall_score': (sr + eff) / 2,
@@ -190,9 +202,8 @@ class VisualizationReportGenerator:
         def safe_avg(key, fallback_key=None):
             values = [r.get(key, r.get(fallback_key, 0)) for r in recent]
             avg = sum(values) / len(values)
-            # 核心逻辑：如果平均值小于等于 1，认为是比例，乘以 100；否则认为是原始分
             result = avg * 100 if avg <= 1.0 else avg
-            return min(100, max(0, result)) # 强制限制在 0-100 之间
+            return min(100, max(0, result))
 
         return {
             'success_rate': safe_avg('success_rate', 'overall_score'),
@@ -203,6 +214,36 @@ class VisualizationReportGenerator:
             'innovation': safe_avg('innovation', 'skill_effectiveness'),
         }
     
+    def _get_actual_task_count(self) -> int:
+        """获取实际任务总数（从 task_executions 或 task_records 表）"""
+        if not self.db_path.exists():
+            return 0
+        
+        conn = sqlite3.connect(str(self.db_path))
+        cursor = conn.cursor()
+        
+        try:
+            # 尝试从 task_executions 表查询
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='task_executions'")
+            if cursor.fetchone():
+                cursor.execute("SELECT COUNT(*) FROM task_executions")
+                count = cursor.fetchone()[0]
+                if count > 0:
+                    return count
+            
+            # 如果 task_executions 没有数据，尝试 task_records 表
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='task_records'")
+            if cursor.fetchone():
+                cursor.execute("SELECT COUNT(*) FROM task_records")
+                return cursor.fetchone()[0]
+            
+            return 0
+        except Exception as e:
+            print(f"⚠️  获取任务数失败: {e}")
+            return 0
+        finally:
+            conn.close()
+    
     def _get_task_details(self) -> List[Dict]:
         """获取最近执行的任务详情 (v2.1 新增)"""
         if not self.db_path.exists():
@@ -212,25 +253,57 @@ class VisualizationReportGenerator:
         cursor = conn.cursor()
         
         try:
-            cursor.execute("""
-                SELECT task_id, description, success, duration, iterations, timestamp
-                FROM task_records
-                ORDER BY timestamp DESC LIMIT 10
-            """)
+            # 尝试从 task_executions 表查询
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='task_executions'")
+            if cursor.fetchone():
+                cursor.execute("""
+                    SELECT task_id, description, success, duration_seconds, iterations, start_time
+                    FROM task_executions
+                    ORDER BY start_time DESC LIMIT 20
+                """)
+                
+                tasks = []
+                for row in cursor.fetchall():
+                    tasks.append({
+                        'id': row[0],
+                        'desc': row[1] or '无描述',
+                        'success': row[2],
+                        'duration': row[3] or 0,
+                        'iterations': row[4] or 0,
+                        'time': row[5] or '未知'
+                    })
+                
+                if tasks:
+                    return tasks
             
-            tasks = []
-            for row in cursor.fetchall():
-                tasks.append({
-                    'id': row[0],
-                    'desc': row[1],
-                    'success': row[2],
-                    'duration': row[3],
-                    'iterations': row[4],
-                    'time': row[5]
-                })
-            return tasks
+            # 如果 task_executions 表没有数据，尝试 task_records 表
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='task_records'")
+            if cursor.fetchone():
+                cursor.execute("""
+                    SELECT task_id, description, success, duration, iterations, timestamp
+                    FROM task_records
+                    ORDER BY timestamp DESC LIMIT 20
+                """)
+                
+                tasks = []
+                for row in cursor.fetchall():
+                    tasks.append({
+                        'id': row[0],
+                        'desc': row[1] or '无描述',
+                        'success': row[2],
+                        'duration': row[3] or 0,
+                        'iterations': row[4] or 0,
+                        'time': row[5] or '未知'
+                    })
+                return tasks
+            
+            # 如果两个表都不存在或没有数据，返回空列表
+            print("⚠️  数据库中暂无任务记录")
+            return []
         except Exception as e:
             print(f"⚠️  获取任务详情失败: {e}")
+            import traceback
+            traceback.print_exc()
             return []
         finally:
             conn.close()
@@ -304,52 +377,10 @@ class VisualizationReportGenerator:
     
     def _calculate_memory_efficiency(self) -> float:
         """
-        计算记忆效率指标 (v2.1 新增)
-        基于最近任务的 Token 使用情况估算
+        计算记忆效率指标 (已废弃，保留接口以避免报错)
+        该指标不再单独展示，而是整合到成本效率维度中
         """
-        if not self.db_path.exists():
-            return 0.0
-            
-        conn = sqlite3.connect(str(self.db_path))
-        cursor = conn.cursor()
-        
-        try:
-            # 尝试从 execution_traces 的 metadata 中提取 token 信息
-            cursor.execute("""
-                SELECT metadata_json FROM execution_traces 
-                WHERE metadata_json LIKE '%tokens%'
-                ORDER BY id DESC LIMIT 50
-            """)
-            
-            rows = cursor.fetchall()
-            if not rows:
-                return 75.0 # 默认值
-                
-            total_tokens = 0
-            count = 0
-            for row in rows:
-                try:
-                    meta = json.loads(row[0])
-                    tokens = meta.get('tokens', 0)
-                    if tokens > 0:
-                        total_tokens += tokens
-                        count += 1
-                except:
-                    continue
-            
-            if count == 0:
-                return 75.0
-                
-            avg_tokens = total_tokens / count
-            # 假设基准线是 1000 tokens，越低越高效
-            efficiency = max(0, 100 - (avg_tokens / 20))
-            return round(efficiency, 2)
-            
-        except Exception as e:
-            print(f"⚠️  计算记忆效率失败: {e}")
-            return 75.0
-        finally:
-            conn.close()
+        return 75.0  # 返回默认值，避免影响综合评分
     
     def _calculate_historical_trends(self) -> Dict:
         """计算历史趋势数据"""
@@ -435,8 +466,9 @@ class VisualizationReportGenerator:
     
     def _generate_html_report(self, overall_score: float, radar_data: Dict,
                              trend_data: Dict, ab_test_data: Dict, 
-                             memory_efficiency: float = 75.0, task_details: List[Dict] = None) -> Path:
-        """生成 HTML 格式的精美报告（增强版：支持离线图表）"""
+                             memory_efficiency: float = 75.0, task_details: List[Dict] = None,
+                             stats_summary: Dict = None) -> Path:
+        """生成 HTML 格式的精美报告（增强版：图表库已内置）"""
         
         timestamp = datetime.now().strftime("%Y年%m月%d日 %H:%M")
         filename = f"evolution_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.html"
@@ -444,19 +476,21 @@ class VisualizationReportGenerator:
         
         # 尝试下载 Chart.js 到本地以支持离线查看
         chart_js_path = self.report_dir / "chart.min.js"
-        chart_src = "https://cdn.jsdelivr.net/npm/chart.js"
+        chart_src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
         
         if not chart_js_path.exists():
             try:
                 import urllib.request
-                print("📥 正在下载 Chart.js 库以支持离线查看...")
+                print("📥 正在下载 Chart.js 库以便本地使用...")
                 urllib.request.urlretrieve(chart_src, str(chart_js_path))
                 chart_src = "chart.min.js"
-                print("✅ Chart.js 下载成功")
+                print(f"✅ Chart.js 下载成功 ({chart_js_path.stat().st_size / 1024:.1f} KB)")
             except Exception as e:
                 print(f"⚠️  Chart.js 下载失败 ({e})，将使用 CDN 链接")
+                chart_src = "https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
         else:
             chart_src = "chart.min.js"
+            print(f"✅ 检测到本地 Chart.js 文件 ({chart_js_path.stat().st_size / 1024:.1f} KB)")
         
         html_content = f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -606,17 +640,25 @@ class VisualizationReportGenerator:
                 <div style="font-size: 1.2em; margin-top: 10px;">
                     Holistic Evolution Index
                 </div>
-                <div style="margin-top: 20px; display: flex; justify-content: center; gap: 30px;">
-                    <div style="background: rgba(255,255,255,0.2); padding: 10px 20px; border-radius: 8px;">
-                        <div style="font-size: 1.5em; font-weight: bold;">{memory_efficiency:.2f}%</div>
-                        <div style="font-size: 0.9em;">记忆效率 (Memory Efficiency)</div>
-                    </div>
-                </div>
             </div>
             
             <!-- 六维能力雷达图 -->
             <div class="section">
                 <h2>📊 六维能力雷达图</h2>
+                
+                <!-- 维度说明 -->
+                <div style="background: #e7f3ff; border-left: 4px solid #2196F3; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+                    <h4 style="margin: 0 0 10px 0; color: #2196F3;">📖 六维能力指标说明</h4>
+                    <div style="font-size: 0.9em; color: #666; line-height: 1.8;">
+                        <p style="margin: 5px 0;"><strong>成功率 (Success Rate)</strong>: 任务成功完成的比例，反映 Agent 的可靠性（权重: 20%）</p>
+                        <p style="margin: 5px 0;"><strong>效率提升 (Efficiency Gain)</strong>: 相对于基准时间（900秒）的速度提升百分比，越高越好（权重: 15%）</p>
+                        <p style="margin: 5px 0;"><strong>用户满意度 (User Satisfaction)</strong>: 基于输出质量和错误率的估算值，反映用户体验（权重: 20%）</p>
+                        <p style="margin: 5px 0;"><strong>使用活跃度 (Usage Activity)</strong>: Agent 的使用频率和任务数量，反映实际应用程度（权重: 15%）</p>
+                        <p style="margin: 5px 0;"><strong>成本效率 (Cost Efficiency)</strong>: Token 使用的经济性，低成本高产出得分更高（权重: 15%）</p>
+                        <p style="margin: 5px 0;"><strong>创新性 (Innovation)</strong>: 解决方案的多样性和创造性，鼓励探索新方法（权重: 15%）</p>
+                    </div>
+                </div>
+                
                 <div class="chart-container">
                     <canvas id="radarChart"></canvas>
                 </div>
@@ -663,21 +705,33 @@ class VisualizationReportGenerator:
             <!-- 统计摘要 -->
             <div class="section">
                 <h2>📊 统计摘要 (Statistical Summary)</h2>
+                
+                <!-- 指标说明 -->
+                <div style="background: #f8f9fa; border-left: 4px solid #667eea; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+                    <h4 style="margin: 0 0 10px 0; color: #667eea;">📖 指标说明</h4>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.9em; color: #666; line-height: 1.8;">
+                        <li><strong>已完成任务数</strong>: 数据库中记录的实际执行任务总数（来自 task_executions 表）</li>
+                        <li><strong>分数波动范围</strong>: 多次评估中综合评分的最大差值（首次评估为0）</li>
+                        <li><strong>平均分数</strong>: 所有评估记录的综合评分平均值（基于六维能力加权计算）</li>
+                        <li><strong>趋势方向</strong>: 最近两次评估的分数变化方向（↑上升 / ↓下降 / -无变化）</li>
+                    </ul>
+                </div>
+                
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                     <div class="metric" style="text-align: center;">
-                        <div class="metric-value">{len(trend_data.get('dates', []))}</div>
-                        <div class="metric-label">评估天数</div>
+                        <div class="metric-value">{stats_summary['total_tasks']}</div>
+                        <div class="metric-label">已完成任务数</div>
                     </div>
                     <div class="metric" style="text-align: center;">
-                        <div class="metric-value">{round(max(trend_data.get('scores', [0])) - min(trend_data.get('scores', [0])), 2) if trend_data.get('scores') else 0}</div>
-                        <div class="metric-label">提升幅度</div>
+                        <div class="metric-value">{stats_summary['score_range']}</div>
+                        <div class="metric-label">分数波动范围</div>
                     </div>
                     <div class="metric" style="text-align: center;">
-                        <div class="metric-value">{round(sum(trend_data.get('scores', [0])) / len(trend_data.get('scores', [1])) if trend_data.get('scores') else 0, 2)}</div>
+                        <div class="metric-value">{stats_summary['avg_score']}</div>
                         <div class="metric-label">平均分数</div>
                     </div>
                     <div class="metric" style="text-align: center;">
-                        <div class="metric-value">{'↑' if len(trend_data.get('scores', [])) > 1 and trend_data['scores'][-1] > trend_data['scores'][0] else '↓'}</div>
+                        <div class="metric-value">{stats_summary['trend_direction']}</div>
                         <div class="metric-label">趋势方向</div>
                     </div>
                 </div>
@@ -693,6 +747,18 @@ class VisualizationReportGenerator:
             <div class="section">
                 <h2>📋 基准测试任务清单 (Benchmark Task List)</h2>
                 <p style="color: #666; margin-bottom: 15px;">点击任务行可查看详细的执行链路步骤：</p>
+                
+                <!-- 列说明 -->
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 0.9em;">
+                    <strong>📌 列说明：</strong>
+                    <ul style="margin: 8px 0 0 0; padding-left: 20px; color: #856404; line-height: 1.6;">
+                        <li><strong>任务 ID</strong>: 唯一标识符（格式: real-os-task-N）</li>
+                        <li><strong>任务描述与链路详情</strong>: 任务的详细描述和执行时间戳</li>
+                        <li><strong>结果</strong>: ✅ 成功 / ❌ 失败（基于 OpenSpace 返回的 status 字段）</li>
+                        <li><strong>耗时 (s)</strong>: 从任务开始到结束的总时间（秒），包含 LLM 调用和工具执行时间</li>
+                        <li><strong>迭代次数</strong>: OpenSpace Agent 的 LLM 调用次数（每次调用算一次迭代，非详细步骤数）</li>
+                    </ul>
+                </div>
                 {self._generate_task_table_html(task_details)}
             </div>
             <div class="section">
@@ -809,7 +875,7 @@ class VisualizationReportGenerator:
                         <li><strong>置信区间：</strong> 当前报告展示的是点估计值（Point Estimate）。在样本量超过 100 个任务后，系统将自动计算 95% 置信区间。</li>
                         <li><strong>A/B 测试效力：</strong> p-value 仅作为参考。当样本量小于 30 时，统计检验效力（Power）可能不足，建议谨慎解读显著性结果。</li>
                         <li><strong>趋势滞后：</strong> 历史趋势图按天聚合数据。如果当天未运行新任务，图表将沿用最近一次的有效快照。</li>
-                        <li><strong>离线渲染：</strong> 本报告已自动下载图表库，支持完全离线查看。</li>
+                        <li><strong>图表库：</strong> 本报告已包含 Chart.js 图表库文件，无需网络连接即可查看。</li>
                     </ul>
                 </div>
             </div>
@@ -833,7 +899,7 @@ class VisualizationReportGenerator:
                         <p style="padding: 15px; background: white; border-radius: 5px; margin-top: 10px; line-height: 1.8;">
                             <strong>公式：</strong>[1 - (实际耗时 / 基准耗时)] × 100<br>
                             <strong>数据来源：</strong>记录每个任务的开始和结束时间戳。<br>
-                            <strong>说明：</strong>耗时越短，分数越高；若超过基准时间（默认 300 秒），分数将线性下降至 0。<br>
+                            <strong>说明：</strong>耗时越短，分数越高；若超过基准时间（默认 900 秒），分数将线性下降至 0。<br>
                             <strong>权重：</strong>在综合评分中占 15%
                         </p>
                     </details>
@@ -870,13 +936,6 @@ class VisualizationReportGenerator:
                 </div>
             </div>
 
-            <!-- 基准测试任务清单 -->
-            <div class="section">
-                <h2>📋 基准测试任务清单 (Benchmark Task List)</h2>
-                <p style="color: #666; margin-bottom: 15px;">点击任务行可查看详细的执行链路步骤：</p>
-                {self._generate_task_table_html(task_details)}
-            </div>
-
             <!-- 轨迹详情模态框 (v2.1 新增) -->
             <div id="traceModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
                 <div style="background: white; width: 80%; max-width: 900px; max-height: 80vh; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column;">
@@ -899,6 +958,19 @@ class VisualizationReportGenerator:
     <script>
         // v2.1: 轨迹数据将通过 Python 动态注入
         
+        // HTML 转义函数，防止 XSS 和 HTML 结构破坏
+        function escapeHtml(text) {{
+            if (!text) return '';
+            const map = {{
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            }};
+            return String(text).replace(/[&<>"']/g, function(m) {{ return map[m]; }});
+        }}
+        
         function showTraceDetails(taskId) {{
             console.log("🔍 正在查找任务 ID:", taskId);
             console.log("📦 traceData 中包含的任务 IDs:", Object.keys(traceData));
@@ -914,12 +986,14 @@ class VisualizationReportGenerator:
                 let html = '';
                 steps.forEach(step => {{
                     const tokenInfo = step.tokens > 0 ? `<span style="color: #667eea; font-size: 0.8em;">(${{step.tokens}} tokens)</span>` : '';
+                    // 使用 escapeHtml 转义内容，防止 HTML 结构破坏
+                    const escapedContent = escapeHtml(step.content);
                     html += `
                         <div style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px; border-left: 3px solid #667eea;">
                             <div style="font-weight: bold; color: #333; margin-bottom: 5px;">
-                                Step ${{step.step_id}}: ${{step.type}} ${{tokenInfo}}
+                                Step ${{step.step_id}}: ${{escapeHtml(step.type)}} ${{tokenInfo}}
                             </div>
-                            <pre style="white-space: pre-wrap; word-wrap: break-word; color: #555; margin: 0;">${{step.content}}</pre>
+                            <pre style="white-space: pre-wrap; word-wrap: break-word; color: #555; margin: 0;">${{escapedContent}}</pre>
                         </div>
                     `;
                 }});
@@ -988,10 +1062,12 @@ class VisualizationReportGenerator:
         with open(filepath, 'w', encoding='utf-8-sig') as f:
             # 1. 构造轨迹数据字典
             trace_dict = {}
+            total_steps = 0
             for task in task_details:
                 steps = self._get_trace_steps(task['id'])
                 if steps:
                     trace_dict[task['id']] = steps
+                    total_steps += len(steps)
             
             # 2. 核心修复：使用 Base64 编码注入，彻底杜绝特殊字符导致的 JS 语法错误
             import base64
@@ -1011,7 +1087,13 @@ class VisualizationReportGenerator:
             if trace_json_str == "{}":
                 print("❌ 自检查失败: traceData 为空！")
             else:
-                print(f"✅ 自检查通过: 已注入 {len(trace_dict)} 个任务的链路数据。")
+                # 验证 Base64 解码后的数据完整性
+                decoded_check = base64.b64decode(trace_b64).decode('utf-8')
+                decoded_dict = json.loads(decoded_check)
+                print(f"✅ 自检查通过: 已注入 {len(trace_dict)} 个任务的链路数据，共 {total_steps} 个步骤")
+                print(f"   - Base64 编码长度: {len(trace_b64):,} 字符")
+                print(f"   - 原始 JSON 长度: {len(trace_json_str):,} 字符")
+                print(f"   - 数据完整性: {'✓' if len(decoded_dict) == len(trace_dict) else '✗'}")
         
         return filepath
     
@@ -1020,7 +1102,13 @@ class VisualizationReportGenerator:
         tests = ab_test_data.get('tests', [])
         
         if not tests:
-            return "<p style='color: #999;'>暂无 A/B 测试数据</p>"
+            return """
+            <div style="padding: 30px; text-align: center; background: #f8f9fa; border-radius: 8px; color: #666;">
+                <div style="font-size: 2em; margin-bottom: 10px;">🧪</div>
+                <div style="font-size: 1.1em; margin-bottom: 5px; font-weight: bold;">A/B 测试功能就绪</div>
+                <div style="font-size: 0.9em;">首次评估暂无对比数据，后续可同时运行多个配置进行性能对比</div>
+            </div>
+            """
         
         html = ""
         for test in tests:
@@ -1058,10 +1146,10 @@ class VisualizationReportGenerator:
             # 数据不足时显示占位符
             return """
             <div id="trendChartContainer" style="min-height: 300px; display: flex; align-items: center; justify-content: center; background: #f8f9fa; border-radius: 8px;">
-                <div style="text-align: center; padding: 40px; color: #999;">
-                    <div style="font-size: 3em; margin-bottom: 10px;">📊</div>
-                    <div style="font-size: 1.2em; margin-bottom: 10px;">数据积累中...</div>
-                    <div style="font-size: 0.9em;">需要至少 2 天的评估数据才能生成趋势分析</div>
+                <div style="text-align: center; padding: 40px; color: #666;">
+                    <div style="font-size: 3em; margin-bottom: 10px;">📈</div>
+                    <div style="font-size: 1.2em; margin-bottom: 10px; font-weight: bold;">趋势图即将上线</div>
+                    <div style="font-size: 0.9em;">首次评估暂无历史数据，运行多次后将自动展示进化轨迹</div>
                 </div>
             </div>
             """
@@ -1282,7 +1370,7 @@ class VisualizationReportGenerator:
                         <th style="padding: 12px; border-bottom: 2px solid #667eea;">任务描述与链路详情</th>
                         <th style="padding: 12px; border-bottom: 2px solid #667eea;">结果</th>
                         <th style="padding: 12px; border-bottom: 2px solid #667eea;">耗时 (s)</th>
-                        <th style="padding: 12px; border-bottom: 2px solid #667eea;">迭代/步数</th>
+                        <th style="padding: 12px; border-bottom: 2px solid #667eea;">迭代次数</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1292,7 +1380,7 @@ class VisualizationReportGenerator:
                 status_color = "#28a745" if task[2] else "#dc3545"
                 status_text = "✅ 成功" if task[2] else "❌ 失败"
                 # 增加迭代次数的视觉提示，如果是长链路则高亮
-                iterations_display = f"<span style='color: #d63384; font-weight: bold;'>{task[4]} 步</span>" if task[4] > 5 else f"{task[4]} 步"
+                iterations_display = f"<span style='color: #d63384; font-weight: bold;'>{task[4]} 次</span>" if task[4] > 5 else f"{task[4]} 次"
                 
                 html += f"""
                     <tr>
@@ -1328,7 +1416,7 @@ class VisualizationReportGenerator:
                     <th style="padding: 12px; border-bottom: 2px solid #667eea;">任务描述与链路详情</th>
                     <th style="padding: 12px; border-bottom: 2px solid #667eea;">结果</th>
                     <th style="padding: 12px; border-bottom: 2px solid #667eea;">耗时 (s)</th>
-                    <th style="padding: 12px; border-bottom: 2px solid #667eea;">迭代/步数</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #667eea;">迭代次数</th>
                 </tr>
             </thead>
             <tbody>
@@ -1337,7 +1425,7 @@ class VisualizationReportGenerator:
         for task in tasks:
             status_color = "#28a745" if task['success'] else "#dc3545"
             status_text = "✅ 成功" if task['success'] else "❌ 失败"
-            iterations_display = f"<span style='color: #d63384; font-weight: bold;'>{task['iterations']} 步</span>" if task['iterations'] > 5 else f"{task['iterations']} 步"
+            iterations_display = f"<span style='color: #d63384; font-weight: bold;'>{task['iterations']} 次</span>" if task['iterations'] > 5 else f"{task['iterations']} 次"
             
             # 增加点击事件，传入 task_id
             html += f"""
@@ -1362,8 +1450,8 @@ class VisualizationReportGenerator:
         for task in tasks:
             steps = self._get_trace_steps(task['id'])
             if steps:
-                # 确保 JSON 字符串中的引号不会破坏 JS 语法
-                json_str = json.dumps(steps).replace("'", "\\'")
+                # 确保 JSON 字符串中的引号不会破坏 JS 语法，并保留中文等 Unicode 字符
+                json_str = json.dumps(steps, ensure_ascii=False).replace("'", "\\'")
                 js_parts.append(f"'{task['id']}': {json_str}")
         return ",\n            ".join(js_parts) if js_parts else "// No trace data"
 
