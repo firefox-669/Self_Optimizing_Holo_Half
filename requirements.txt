@@ -1,0 +1,35 @@
+# SOHH (Self-Optimizing Holo-Half) Requirements
+# Install with: pip install -r requirements.txt
+
+# Core dependencies
+sqlite3          # Built-in, no installation needed
+json             # Built-in, no installation needed
+pathlib          # Built-in, no installation needed
+datetime         # Built-in, no installation needed
+typing           # Built-in, no installation needed
+
+# For OpenSpace integration (optional, if using MonitoredOpenSpace)
+# openspace      # Install separately from https://github.com/OpenSpace-Agent/OpenSpace
+
+# For data visualization (used in reports)
+# Note: Chart.js is included via CDN in HTML reports, no Python package needed
+
+# For A/B testing and statistical analysis
+scipy>=1.7.0     # Statistical tests (p-value calculation)
+
+# For enhanced reporting (optional)
+jinja2>=3.0.0    # Template engine for report generation
+
+# For benchmark execution
+asyncio          # Built-in, no installation needed
+
+# For environment variable management
+python-dotenv>=0.19.0  # Load .env files
+
+# Optional: For advanced analytics
+numpy>=1.21.0    # Numerical computations
+pandas>=1.3.0    # Data analysis (optional, for custom metrics)
+
+# Development dependencies (optional)
+pytest>=7.0.0    # Testing framework
+flake8>=4.0.0    # Code linting

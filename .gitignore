@@ -12,9 +12,11 @@ ENV/
 .sohh_cache/
 .sohh_evolution/
 .sohh_patches/
+.sohh_snapshots/
 logs/
 reports/*.html
 *.db
+.env
 
 # Test & Temp files
 gen_openspace_report.py
@@ -25,6 +27,18 @@ index.html
 person
 secret_code
 xxx/
+check_*.py
+*_draft.md
+*_template.*
+*CHECKLIST.md
+*SUMMARY.md
+REFERENCE.md
+SUBMISSION_*
+*.bat
+auto_submit_pipeline.py
+download_file.py
+generate_quick_report.py
+comprehensive_quality_validator.py
 
 # IDE
 .vscode/
