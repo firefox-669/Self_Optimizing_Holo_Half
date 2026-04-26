@@ -20,11 +20,28 @@ async def run_real_openspace_benchmark():
     # 1. 初始化 SOHH 采集器
     collector = SOHHDataCollector(agent_id="openspace-v1.0", project_id="openspace-official")
     
-    # 2. 定义要测试的真实任务列表
+    # 2. 定义要测试的真实任务列表（15个多样化任务，充分展示能力）
     tasks = [
-        "Write a Python script to calculate the Fibonacci sequence up to 100 terms.",
-        "Create a simple HTML page with a button that changes color when clicked.",
-        "Refactor the following code to use list comprehension: [x for x in range(10) if x % 2 == 0]"
+        # 简单任务 (1-5)
+        "Write a Python function to calculate factorial of a number.",
+        "Create a HTML page with a heading and paragraph.",
+        "Write a SQL query to select all users from a database.",
+        "Create a CSS style for a centered div with blue background.",
+        "Write a JavaScript function to add two numbers.",
+        
+        # 中等任务 (6-10)
+        "Write a Python script to read a CSV file and count rows by category.",
+        "Create a REST API endpoint using Flask that returns JSON data.",
+        "Write a Python class for a simple bank account with deposit and withdraw methods.",
+        "Create a React component that displays a list of items with delete button.",
+        "Write a Python script to download a file from URL and save it locally.",
+        
+        # 复杂任务 (11-15)
+        "Build a Python web scraper that extracts article titles from a news website.",
+        "Create a Dockerfile for a Python Flask application with PostgreSQL.",
+        "Write a Python script to analyze sentiment of text using NLTK library.",
+        "Implement a binary search tree in Python with insert, search, and delete operations.",
+        "Create a GitHub Actions workflow to test and deploy a Python package."
     ]
     
     try:
@@ -53,7 +70,10 @@ async def run_real_openspace_benchmark():
         
         for i, task_desc in enumerate(tasks):
             task_id = f"real-os-task-{i+1}"
-            print(f"\n[{i+1}/{len(tasks)}] 正在执行任务: {task_desc[:50]}...")
+            print(f"\n{'='*70}")
+            print(f"[{i+1}/{len(tasks)}] 正在执行任务:")
+            print(f"   {task_desc}")
+            print(f"{'='*70}")
             
             # [接入点 1] 记录任务开始
             collector.start_task(task_id=task_id, description=task_desc)
@@ -61,7 +81,7 @@ async def run_real_openspace_benchmark():
             
             try:
                 # 执行真实任务
-                result = await agent.execute(task=task_desc, max_iterations=10)
+                result = await agent.execute(task=task_desc, max_iterations=15)
                 
                 duration = time.time() - start_time
                 status = result.get('status', 'unknown')
@@ -87,11 +107,19 @@ async def run_real_openspace_benchmark():
                     metadata={'real_task_id': real_task_id, 'log_path': log_path}
                 )
                 
-                print(f"   ✅ 任务完成 (状态: {status}, 耗时: {duration:.2f}s)")
+                status_icon = "✅" if success else "❌"
+                print(f"\n{status_icon} 任务完成")
+                print(f"   状态: {status}")
+                print(f"   耗时: {duration:.2f}s")
+                print(f"   迭代次数: {result.get('iterations', 0)}")
+                if not success:
+                    print(f"   错误: {result.get('error', 'Unknown')}")
                 
             except Exception as e:
                 duration = time.time() - start_time
-                print(f"   ❌ 任务失败: {e}")
+                print(f"\n❌ 任务失败: {e}")
+                import traceback
+                traceback.print_exc()
                 collector.end_task(task_id=task_id, success=False, error_message=str(e))
         
         # 4. 提交所有数据到 SOHH 数据库
@@ -104,8 +132,23 @@ async def run_real_openspace_benchmark():
             log_dir = os.path.join(os.path.dirname(__file__), "logs", "recordings")
             
         print(f"\n🔍 正在查找链路日志: {log_dir}")
-        collector.submit_to_sohh(db_path=db_path, trace_source_path=log_dir)
-        print(f"✅ 真实测试数据已同步至 SOHH 数据库!")
+        result = collector.submit_to_sohh(db_path=db_path, trace_source_path=log_dir)
+        
+        # 拍摄能力快照
+        snapshot = collector.take_capability_snapshot()
+        
+        print(f"\n{'='*70}")
+        print(f"✅ Benchmark 完成！")
+        print(f"{'='*70}")
+        print(f"\n📊 统计摘要:")
+        print(f"   总任务数: {len(tasks)}")
+        print(f"   成功数: {sum(1 for t in collector.task_executions if t.success)}")
+        print(f"   失败数: {sum(1 for t in collector.task_executions if not t.success)}")
+        print(f"   成功率: {snapshot.success_rate:.1f}%")
+        print(f"   平均耗时: {sum(t.duration_seconds for t in collector.task_executions if t.duration_seconds) / max(1, sum(1 for t in collector.task_executions if t.duration_seconds)):.1f}s")
+        print(f"   综合评分: {snapshot.overall_score:.1f}/100")
+        print(f"\n💾 数据已保存至: {db_path}")
+        print(f"\n📈 下一步: 运行 'python -m user_scoring.visualization_report' 生成报告")
         
     except ImportError:
         print("⚠️  未找到 openspace 模块，请确保在正确的环境下运行。")

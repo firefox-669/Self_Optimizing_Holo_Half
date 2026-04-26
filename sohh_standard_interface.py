@@ -497,6 +497,132 @@ class SOHHDataCollector:
         self.capability_snapshots.append(snapshot)
         return snapshot
     
+    def save_scoring_record(self, db_path: str = None) -> bool:
+        """
+        保存当前能力快照到评分记录表（用于历史趋势分析）
+        
+        Args:
+            db_path: 数据库路径，默认为 data/holo_half.db
+            
+        Returns:
+            是否成功保存
+        """
+        if not self.capability_snapshots:
+            print("⚠️  没有能力快照可保存")
+            return False
+        
+        # 获取最新的快照
+        latest_snapshot = self.capability_snapshots[-1]
+        
+        import sqlite3
+        from pathlib import Path
+        
+        if db_path is None:
+            db_path = "data/holo_half.db"
+        
+        db_path = Path(db_path)
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        conn = sqlite3.connect(str(db_path))
+        cursor = conn.cursor()
+        
+        try:
+            # 确保表存在
+            self._create_tables(cursor)
+            
+            # 插入评分记录
+            cursor.execute("""
+                INSERT INTO scoring_records 
+                (timestamp, agent_id, overall_score, usage_activity, success_rate,
+                 efficiency_gain, user_satisfaction, cost_efficiency, innovation)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                latest_snapshot.timestamp.isoformat(),
+                latest_snapshot.agent_id,
+                latest_snapshot.overall_score / 100.0,  # 转换为 0-1 范围
+                latest_snapshot.usage_activity / 100.0,
+                latest_snapshot.success_rate / 100.0,
+                latest_snapshot.efficiency_gain / 100.0,
+                latest_snapshot.user_satisfaction / 100.0,
+                latest_snapshot.cost_efficiency / 100.0,
+                latest_snapshot.innovation / 100.0
+            ))
+            
+            conn.commit()
+            print(f"✅ 评分记录已保存: {latest_snapshot.timestamp}")
+            return True
+            
+        except Exception as e:
+            conn.rollback()
+            print(f"❌ 保存评分记录失败: {e}")
+            return False
+        finally:
+            conn.close()
+    
+    def save_ab_test_result(self, variant_a_name: str, variant_b_name: str,
+                           variant_a_score: float, variant_b_score: float,
+                           p_value: float, is_significant: bool,
+                           db_path: str = None) -> bool:
+        """
+        保存 A/B 测试结果
+        
+        Args:
+            variant_a_name: A版本名称
+            variant_b_name: B版本名称
+            variant_a_score: A版本得分 (0-1)
+            variant_b_score: B版本得分 (0-1)
+            p_value: P值
+            is_significant: 是否显著
+            db_path: 数据库路径，默认为 data/holo_half.db
+            
+        Returns:
+            是否成功保存
+        """
+        import sqlite3
+        from pathlib import Path
+        from datetime import datetime
+        
+        if db_path is None:
+            db_path = "data/holo_half.db"
+        
+        db_path = Path(db_path)
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        conn = sqlite3.connect(str(db_path))
+        cursor = conn.cursor()
+        
+        try:
+            # 确保表存在
+            self._create_tables(cursor)
+            
+            # 插入A/B测试结果
+            cursor.execute("""
+                INSERT INTO ab_test_results 
+                (variant_a_name, variant_b_name, variant_a_score, variant_b_score,
+                 p_value, is_significant, created_at, agent_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                variant_a_name,
+                variant_b_name,
+                variant_a_score,
+                variant_b_score,
+                p_value,
+                is_significant,
+                datetime.now().isoformat(),
+                self.agent_id
+            ))
+            
+            conn.commit()
+            print(f"✅ A/B测试结果已保存: {variant_a_name} vs {variant_b_name}")
+            return True
+            
+        except Exception as e:
+            conn.rollback()
+            print(f"❌ 保存A/B测试结果失败: {e}")
+            return False
+        finally:
+            conn.close()
+    
     def submit_to_sohh(self, db_path: str = "data/holo_half.db", trace_source_path: str = None) -> Dict:
         """
         提交数据到 SOHH 数据库
@@ -605,11 +731,12 @@ class SOHHDataCollector:
                 try:
                     cursor.execute("""
                         INSERT OR REPLACE INTO task_records 
-                        (task_id, description, success, duration, iterations, error_message)
-                        VALUES (?, ?, ?, ?, ?, ?)
+                        (task_id, description, success, duration, iterations, error_message, timestamp)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
                     """, (
                         task.task_id, task.description, task.success,
-                        task.duration_seconds, task.iterations, task.error_message
+                        task.duration_seconds, task.iterations, task.error_message,
+                        task.start_time.isoformat() if task.start_time else None
                     ))
                     tasks_records_inserted += 1
                 except Exception as e:
@@ -636,6 +763,33 @@ class SOHHDataCollector:
             
             conn.commit()
             
+            # 自动保存评分记录（用于历史趋势分析）
+            scoring_saved = False
+            if self.capability_snapshots:
+                try:
+                    # 使用相同的数据库连接保存评分记录
+                    latest_snapshot = self.capability_snapshots[-1]
+                    cursor.execute("""
+                        INSERT INTO scoring_records 
+                        (timestamp, agent_id, overall_score, usage_activity, success_rate,
+                         efficiency_gain, user_satisfaction, cost_efficiency, innovation)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """, (
+                        latest_snapshot.timestamp.isoformat(),
+                        latest_snapshot.agent_id,
+                        latest_snapshot.overall_score / 100.0,  # 转换为 0-1 范围
+                        latest_snapshot.usage_activity / 100.0,
+                        latest_snapshot.success_rate / 100.0,
+                        latest_snapshot.efficiency_gain / 100.0,
+                        latest_snapshot.user_satisfaction / 100.0,
+                        latest_snapshot.cost_efficiency / 100.0,
+                        latest_snapshot.innovation / 100.0
+                    ))
+                    conn.commit()
+                    scoring_saved = True
+                except Exception as e:
+                    print(f"⚠️  保存评分记录失败: {e}")
+            
             result = {
                 'success': True,
                 'tasks_inserted': tasks_inserted,
@@ -643,6 +797,7 @@ class SOHHDataCollector:
                 'snapshots_inserted': snapshots_inserted,
                 'tasks_records_inserted': tasks_records_inserted,
                 'traces_inserted': traces_inserted,
+                'scoring_record_saved': scoring_saved,
                 'db_path': str(db_path)
             }
             
@@ -652,6 +807,7 @@ class SOHHDataCollector:
             print(f"   能力快照: {snapshots_inserted}")
             print(f"   报告任务清单: {tasks_records_inserted}")
             print(f"   执行轨迹步骤: {traces_inserted}")
+            print(f"   评分记录: {'✅ 已保存' if scoring_saved else '⚠️ 未保存'}")
             print(f"   数据库: {db_path}")
             
             return result
@@ -758,6 +914,37 @@ class SOHHDataCollector:
                 content TEXT,
                 metadata_json TEXT,
                 FOREIGN KEY (task_id) REFERENCES task_records(task_id)
+            )
+        """)
+        
+        # 评分记录表 (用于历史趋势分析)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS scoring_records (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+                agent_id TEXT,
+                overall_score REAL,
+                usage_activity REAL,
+                success_rate REAL,
+                efficiency_gain REAL,
+                user_satisfaction REAL,
+                cost_efficiency REAL,
+                innovation REAL
+            )
+        """)
+        
+        # A/B测试结果表
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS ab_test_results (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                variant_a_name TEXT,
+                variant_b_name TEXT,
+                variant_a_score REAL,
+                variant_b_score REAL,
+                p_value REAL,
+                is_significant BOOLEAN,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                agent_id TEXT
             )
         """)
     
