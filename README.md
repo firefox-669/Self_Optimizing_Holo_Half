@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
 [![Version](https://img.shields.io/badge/version-2.1-green.svg)](https://github.com/firefox-669/Self_Optimizing_Holo_Half/releases)
+[![Article](https://img.shields.io/badge/知乎-技术文章-orange.svg)](https://zhuanlan.zhihu.com/p/2031843328103335693)
 
 ---
 
@@ -18,6 +19,10 @@
 > **"我们不是医生替病人锻炼，而是提供专业的体检报告和进化处方。"**
 
 SOHH 通过采集 Agent 的执行数据，生成包含六维能力雷达图、历史趋势分析、A/B 测试对比的专业 HTML 报告，帮助开发者精准定位 Agent 的能力短板并制定优化策略。
+
+### 📝 详细介绍
+
+👉 **[知乎技术文章：SOHH - 为AI Agent打造的科学评估框架](https://zhuanlan.zhihu.com/p/2031843328103335693)**
 
 ---
 
