@@ -250,6 +250,7 @@ class CapabilitySnapshot:
     能力快照 - 定期记录 Agent 的综合能力
     
     用于生成历史趋势图。
+    v2.1 新增：七维能力模型（增加安全性维度）
     """
     snapshot_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     agent_id: str = ""
@@ -263,7 +264,10 @@ class CapabilitySnapshot:
     cost_efficiency: float = 0.0
     innovation: float = 0.0
     
-    # 综合评分
+    # 第七维：安全性评分 (0-100) - v2.1 新增
+    safety_score: float = 100.0  # 默认安全
+    
+    # 综合评分（基于七维加权平均）
     overall_score: float = 0.0
     
     def to_dict(self) -> Dict:
@@ -277,6 +281,7 @@ class CapabilitySnapshot:
             'usage_activity': self.usage_activity,
             'cost_efficiency': self.cost_efficiency,
             'innovation': self.innovation,
+            'safety_score': self.safety_score,  # v2.1 新增
             'overall_score': self.overall_score
         }
 
@@ -478,10 +483,20 @@ class SOHHDataCollector:
         innovation = ((sum(quality_scores) / len(quality_scores) if quality_scores else 0.5) * 50 +
                      (sum(test_scores) / len(test_scores) if test_scores else 0.5) * 50)
         
-        # 综合评分
-        overall_score = (success_rate * 0.2 + efficiency_gain * 0.15 + 
-                        user_satisfaction * 0.2 + usage_activity * 0.15 +
-                        cost_efficiency * 0.15 + innovation * 0.15)
+        # 安全性评分 - v2.1 新增
+        # 从任务元数据中提取安全评分，如果没有则默认为100
+        safety_scores = []
+        for t in completed_tasks:
+            if t.metadata and 'safety_score' in t.metadata:
+                safety_scores.append(t.metadata['safety_score'])
+        safety_score = sum(safety_scores) / len(safety_scores) if safety_scores else 100.0
+        
+        # 综合评分（七维加权平均）- v2.1 更新
+        # 权重分配：成功率20%, 效率15%, 满意度20%, 活跃度10%, 成本10%, 创新10%, 安全15%
+        overall_score = (success_rate * 0.20 + efficiency_gain * 0.15 + 
+                        user_satisfaction * 0.20 + usage_activity * 0.10 +
+                        cost_efficiency * 0.10 + innovation * 0.10 +
+                        safety_score * 0.15)
         
         snapshot = CapabilitySnapshot(
             agent_id=self.agent_id,
@@ -491,6 +506,7 @@ class SOHHDataCollector:
             usage_activity=round(usage_activity, 2),
             cost_efficiency=round(cost_efficiency, 2),
             innovation=round(innovation, 2),
+            safety_score=round(safety_score, 2),  # v2.1 新增
             overall_score=round(overall_score, 2)
         )
         
@@ -534,8 +550,8 @@ class SOHHDataCollector:
             cursor.execute("""
                 INSERT INTO scoring_records 
                 (timestamp, agent_id, overall_score, usage_activity, success_rate,
-                 efficiency_gain, user_satisfaction, cost_efficiency, innovation)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 efficiency_gain, user_satisfaction, cost_efficiency, innovation, safety_score)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 latest_snapshot.timestamp.isoformat(),
                 latest_snapshot.agent_id,
@@ -545,7 +561,8 @@ class SOHHDataCollector:
                 latest_snapshot.efficiency_gain / 100.0,
                 latest_snapshot.user_satisfaction / 100.0,
                 latest_snapshot.cost_efficiency / 100.0,
-                latest_snapshot.innovation / 100.0
+                latest_snapshot.innovation / 100.0,
+                latest_snapshot.safety_score / 100.0  # v2.1 新增
             ))
             
             conn.commit()
@@ -871,6 +888,7 @@ class SOHHDataCollector:
                 usage_activity REAL,
                 cost_efficiency REAL,
                 innovation REAL,
+                safety_score REAL DEFAULT 100.0,  -- v2.1 新增：安全性评分
                 overall_score REAL
             )
         """)
@@ -929,7 +947,8 @@ class SOHHDataCollector:
                 efficiency_gain REAL,
                 user_satisfaction REAL,
                 cost_efficiency REAL,
-                innovation REAL
+                innovation REAL,
+                safety_score REAL DEFAULT 100.0  -- v2.1 新增：安全性评分
             )
         """)
         
