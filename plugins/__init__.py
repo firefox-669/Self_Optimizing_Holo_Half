@@ -8,6 +8,7 @@ from .base import BaseAnalyzer, ExecutionStep
 from .openspace_analyzer import OpenSpaceAnalyzer
 from .openhands_analyzer import OpenHandsAnalyzer
 from .autogen_analyzer import AutoGenAnalyzer
+from .security_assessor import SecurityAssessor, calculate_security_score, get_security_assessment_report
 
 # 注册所有可用的分析器
 AVAILABLE_ANALYZERS = [
@@ -39,6 +40,9 @@ __all__ = [
     'OpenSpaceAnalyzer',
     'OpenHandsAnalyzer',
     'AutoGenAnalyzer',
+    'SecurityAssessor',
+    'calculate_security_score',
+    'get_security_assessment_report',
     'AVAILABLE_ANALYZERS',
     'get_analyzer_for_source'
 ]
