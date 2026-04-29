@@ -1,0 +1,334 @@
+{
+  "service": "sohh-production-agent",
+  "export_time": "2026-04-29T20:35:52.183582",
+  "total_records": 2,
+  "records": [
+    {
+      "type": "metric",
+      "timestamp": "2026-04-29T20:35:48.352022",
+      "data": {
+        "resourceMetrics": [
+          {
+            "resource": {
+              "attributes": [
+                {
+                  "key": "service.name",
+                  "value": {
+                    "stringValue": "sohh-production-agent"
+                  }
+                },
+                {
+                  "key": "agent.id",
+                  "value": {
+                    "stringValue": "otel-demo-agent"
+                  }
+                },
+                {
+                  "key": "snapshot.id",
+                  "value": {
+                    "stringValue": "7bb5210d-f9ec-42e2-95d1-c54113d29c5e"
+                  }
+                }
+              ]
+            },
+            "scopeMetrics": [
+              {
+                "scope": {
+                  "name": "sohh.capability.evaluator",
+                  "version": "2.1.0"
+                },
+                "metrics": [
+                  {
+                    "name": "sohh.success_rate",
+                    "description": "Agent 任务成功率",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466148352022016",
+                          "asDouble": 100.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "success_rate"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.efficiency_gain",
+                    "description": "效率提升百分比",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466148352022016",
+                          "asDouble": 100.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "efficiency_gain"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.user_satisfaction",
+                    "description": "用户满意度评分",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466148352022016",
+                          "asDouble": 50.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "user_satisfaction"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.usage_activity",
+                    "description": "使用活跃度",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466148352022016",
+                          "asDouble": 10,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "usage_activity"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.cost_efficiency",
+                    "description": "成本效率评分",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466148352022016",
+                          "asDouble": 0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "cost_efficiency"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.innovation",
+                    "description": "创新性评分",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466148352022016",
+                          "asDouble": 94.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "innovation"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.safety_score",
+                    "description": "安全性评分 (v2.1)",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466148352022016",
+                          "asDouble": 100.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "safety_score"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.overall_score",
+                    "description": "综合评分（七维加权平均）",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466148352022016",
+                          "asDouble": 70.4,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "overall_score"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "span",
+      "timestamp": "2026-04-29T20:35:48.343999",
+      "data": {
+        "resourceSpans": [
+          {
+            "resource": {
+              "attributes": [
+                {
+                  "key": "service.name",
+                  "value": {
+                    "stringValue": "sohh-production-agent"
+                  }
+                },
+                {
+                  "key": "agent.id",
+                  "value": {
+                    "stringValue": "otel-demo-agent"
+                  }
+                }
+              ]
+            },
+            "scopeSpans": [
+              {
+                "scope": {
+                  "name": "sohh.task.executor",
+                  "version": "2.1.0"
+                },
+                "spans": [
+                  {
+                    "traceId": "4f36fa6b9e04eb9ab5db4cb9997242a7",
+                    "spanId": "a8a8f070755db763",
+                    "parentSpanId": "",
+                    "name": "agent.task.success",
+                    "kind": 2,
+                    "startTimeUnixNano": "1777466148343998976",
+                    "endTimeUnixNano": "1777466148352022016",
+                    "attributes": [
+                      {
+                        "key": "task.id",
+                        "value": {
+                          "stringValue": "otel-task-001"
+                        }
+                      },
+                      {
+                        "key": "agent.id",
+                        "value": {
+                          "stringValue": "otel-demo-agent"
+                        }
+                      },
+                      {
+                        "key": "project.id",
+                        "value": {
+                          "stringValue": "otel-integration-test"
+                        }
+                      },
+                      {
+                        "key": "task.status",
+                        "value": {
+                          "stringValue": "success"
+                        }
+                      },
+                      {
+                        "key": "task.success",
+                        "value": {
+                          "boolValue": true
+                        }
+                      },
+                      {
+                        "key": "task.duration_seconds",
+                        "value": {
+                          "doubleValue": 0.008023
+                        }
+                      },
+                      {
+                        "key": "task.tokens_used",
+                        "value": {
+                          "intValue": "3500"
+                        }
+                      },
+                      {
+                        "key": "task.cost",
+                        "value": {
+                          "doubleValue": 0.0175
+                        }
+                      },
+                      {
+                        "key": "task.iterations",
+                        "value": {
+                          "intValue": "12"
+                        }
+                      },
+                      {
+                        "key": "task.code_quality",
+                        "value": {
+                          "doubleValue": 0.9
+                        }
+                      },
+                      {
+                        "key": "task.test_pass_rate",
+                        "value": {
+                          "doubleValue": 0.98
+                        }
+                      }
+                    ],
+                    "status": {
+                      "code": 0,
+                      "message": null
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

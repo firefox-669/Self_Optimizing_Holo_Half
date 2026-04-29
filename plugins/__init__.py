@@ -9,6 +9,7 @@ from .openspace_analyzer import OpenSpaceAnalyzer
 from .openhands_analyzer import OpenHandsAnalyzer
 from .autogen_analyzer import AutoGenAnalyzer
 from .security_assessor import SecurityAssessor, calculate_security_score, get_security_assessment_report
+from .otel_exporter import OpenTelemetryExporter, create_exporter
 
 # 注册所有可用的分析器
 AVAILABLE_ANALYZERS = [
@@ -43,6 +44,8 @@ __all__ = [
     'SecurityAssessor',
     'calculate_security_score',
     'get_security_assessment_report',
+    'OpenTelemetryExporter',
+    'create_exporter',
     'AVAILABLE_ANALYZERS',
     'get_analyzer_for_source'
 ]

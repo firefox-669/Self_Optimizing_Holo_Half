@@ -1,0 +1,334 @@
+{
+  "service": "sohh-demo-agent",
+  "export_time": "2026-04-29T20:34:47.804300",
+  "total_records": 2,
+  "records": [
+    {
+      "type": "metric",
+      "timestamp": "2026-04-29T20:34:47.059296",
+      "data": {
+        "resourceMetrics": [
+          {
+            "resource": {
+              "attributes": [
+                {
+                  "key": "service.name",
+                  "value": {
+                    "stringValue": "sohh-demo-agent"
+                  }
+                },
+                {
+                  "key": "agent.id",
+                  "value": {
+                    "stringValue": "demo-agent-v1"
+                  }
+                },
+                {
+                  "key": "snapshot.id",
+                  "value": {
+                    "stringValue": "snap_001"
+                  }
+                }
+              ]
+            },
+            "scopeMetrics": [
+              {
+                "scope": {
+                  "name": "sohh.capability.evaluator",
+                  "version": "2.1.0"
+                },
+                "metrics": [
+                  {
+                    "name": "sohh.success_rate",
+                    "description": "Agent 任务成功率",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466087059296000",
+                          "asDouble": 85.5,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "success_rate"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.efficiency_gain",
+                    "description": "效率提升百分比",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466087059296000",
+                          "asDouble": 72.3,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "efficiency_gain"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.user_satisfaction",
+                    "description": "用户满意度评分",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466087059296000",
+                          "asDouble": 90.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "user_satisfaction"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.usage_activity",
+                    "description": "使用活跃度",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466087059296000",
+                          "asDouble": 65.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "usage_activity"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.cost_efficiency",
+                    "description": "成本效率评分",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466087059296000",
+                          "asDouble": 78.5,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "cost_efficiency"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.innovation",
+                    "description": "创新性评分",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466087059296000",
+                          "asDouble": 82.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "innovation"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.safety_score",
+                    "description": "安全性评分 (v2.1)",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466087059296000",
+                          "asDouble": 95.0,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "safety_score"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "sohh.overall_score",
+                    "description": "综合评分（七维加权平均）",
+                    "unit": "percent",
+                    "gauge": {
+                      "dataPoints": [
+                        {
+                          "timeUnixNano": "1777466087059296000",
+                          "asDouble": 81.2,
+                          "attributes": [
+                            {
+                              "key": "dimension",
+                              "value": {
+                                "stringValue": "overall_score"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "type": "span",
+      "timestamp": "2026-04-29T20:34:47.065323",
+      "data": {
+        "resourceSpans": [
+          {
+            "resource": {
+              "attributes": [
+                {
+                  "key": "service.name",
+                  "value": {
+                    "stringValue": "sohh-demo-agent"
+                  }
+                },
+                {
+                  "key": "agent.id",
+                  "value": {
+                    "stringValue": "demo-agent-v1"
+                  }
+                }
+              ]
+            },
+            "scopeSpans": [
+              {
+                "scope": {
+                  "name": "sohh.task.executor",
+                  "version": "2.1.0"
+                },
+                "spans": [
+                  {
+                    "traceId": "9b5848d793913b24654e2e5625b7b41c",
+                    "spanId": "4ec334fa1f44a761",
+                    "parentSpanId": "",
+                    "name": "agent.task.success",
+                    "kind": 2,
+                    "startTimeUnixNano": "1777466087065323008",
+                    "endTimeUnixNano": "1777466087065323008",
+                    "attributes": [
+                      {
+                        "key": "task.id",
+                        "value": {
+                          "stringValue": "task_001"
+                        }
+                      },
+                      {
+                        "key": "agent.id",
+                        "value": {
+                          "stringValue": "demo-agent-v1"
+                        }
+                      },
+                      {
+                        "key": "project.id",
+                        "value": {
+                          "stringValue": "demo-project"
+                        }
+                      },
+                      {
+                        "key": "task.status",
+                        "value": {
+                          "stringValue": "success"
+                        }
+                      },
+                      {
+                        "key": "task.success",
+                        "value": {
+                          "boolValue": true
+                        }
+                      },
+                      {
+                        "key": "task.duration_seconds",
+                        "value": {
+                          "doubleValue": 125.5
+                        }
+                      },
+                      {
+                        "key": "task.tokens_used",
+                        "value": {
+                          "intValue": "2500"
+                        }
+                      },
+                      {
+                        "key": "task.cost",
+                        "value": {
+                          "doubleValue": 0.0125
+                        }
+                      },
+                      {
+                        "key": "task.iterations",
+                        "value": {
+                          "intValue": "8"
+                        }
+                      },
+                      {
+                        "key": "task.code_quality",
+                        "value": {
+                          "doubleValue": 0.88
+                        }
+                      },
+                      {
+                        "key": "task.test_pass_rate",
+                        "value": {
+                          "doubleValue": 0.95
+                        }
+                      }
+                    ],
+                    "status": {
+                      "code": 0,
+                      "message": ""
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
