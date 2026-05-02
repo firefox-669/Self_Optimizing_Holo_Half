@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOHH 安全评估 Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .metric-label {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .metric-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .status-excellent {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-good {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-warning {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+        
+        .incident-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .incident-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 8px;
+        }
+        
+        .incident-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 5px;
+        }
+        
+        .incident-lesson {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .recommendation-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .recommendation-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: #e7f3ff;
+            border-radius: 8px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .priority-critical {
+            border-left-color: #f44336;
+            background: #ffebee;
+        }
+        
+        .priority-high {
+            border-left-color: #ff9800;
+            background: #fff3e0;
+        }
+        
+        .priority-medium {
+            border-left-color: #2196F3;
+            background: #e3f2fd;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔒 SOHH 安全评估 Dashboard</h1>
+            <p>Self-Optimizing Holo Half - 实时安全监控面板</p>
+        </header>
+        
+        <div class="dashboard-grid">
+            <!-- 安全评分卡片 -->
+            <div class="card">
+                <h2>📊 安全评分概览</h2>
+                <div class="metric">
+                    <span class="metric-label">综合安全评分</span>
+                    <span class="metric-value" id="overall-score">--</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">安全等级</span>
+                    <span class="status-badge" id="safety-level">--</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">检测到的风险数</span>
+                    <span class="metric-value" id="risk-count">--</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="safetyChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 历史事故对比 -->
+            <div class="card">
+                <h2>⚠️ 历史事故对比</h2>
+                <ul class="incident-list" id="incident-list">
+                    <li class="incident-item">
+                        <div class="incident-title">暂无检测到与历史事故相似的操作</div>
+                        <div class="incident-lesson">✅ Agent行为安全</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Skills信誉评分 -->
+            <div class="card">
+                <h2>⭐ Skills信誉评分</h2>
+                <div class="metric">
+                    <span class="metric-label">已验证Skills数</span>
+                    <span class="metric-value" id="skills-count">--</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">平均信誉分</span>
+                    <span class="metric-value" id="avg-reputation">--</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="reputationChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 红队测试结果 -->
+            <div class="card">
+                <h2>🛡️ 红队测试</h2>
+                <div class="metric">
+                    <span class="metric-label">测试通过率</span>
+                    <span class="metric-value" id="red-team-pass-rate">--</span>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">发现漏洞数</span>
+                    <span class="metric-value" id="vulnerability-count">--</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="redTeamChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 改进建议 -->
+            <div class="card" style="grid-column: span 2;">
+                <h2>💡 改进建议</h2>
+                <ul class="recommendation-list" id="recommendation-list">
+                    <li class="recommendation-item">
+                        运行安全评估以获取改进建议
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2026 SOHH Security Assessment System | 基于最新AI行业资讯持续优化</p>
+        </div>
+    </div>
+    
+    <script>
+        // API配置
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        // 示例数据（实际应用中从后端API获取）
+        let dashboardData = {
+            overallScore: 85.5,
+            safetyLevel: 'excellent',
+            riskCount: 3,
+            incidents: [
+                {
+                    title: 'Claude AI 9秒删除公司数据库事件 (2026-04-29)',
+                    lesson: '数据库删除操作必须有二次确认和备份验证'
+                },
+                {
+                    title: "Cursor's Rogue AI agent失控删库事件 (2026-05-01)",
+                    lesson: 'Agent失控时需要紧急停止机制和沙箱隔离'
+                }
+            ],
+            skillsVerified: 12,
+            avgReputation: 78.3,
+            redTeamPassRate: 92.5,
+            vulnerabilityCount: 2,
+            recommendations: [
+                { priority: 'critical', text: '为所有数据库删除操作添加二次确认机制' },
+                { priority: 'high', text: '限制危险文件操作的执行权限' },
+                { priority: 'high', text: '加强网络操作的防护层' },
+                { priority: 'medium', text: '建立完整的Guardrails防护体系' }
+            ]
+        };
+        
+        // 从API获取最新数据
+        async function fetchLatestData() {
+            try {
+                // 这里可以调用真实的API端点
+                // const response = await fetch(`${API_BASE_URL}/assess/latest`);
+                // const data = await response.json();
+                // updateDashboardWithData(data);
+                
+                console.log('🔄 数据已刷新');
+            } catch (error) {
+                console.error('❌ 获取数据失败:', error);
+            }
+        }
+        
+        // 自动刷新（每30秒）
+        setInterval(fetchLatestData, 30000);
+        
+        // 更新Dashboard数据
+        function updateDashboard() {
+            document.getElementById('overall-score').textContent = dashboardData.overallScore + '/100';
+            
+            const levelBadge = document.getElementById('safety-level');
+            if (dashboardData.safetyLevel === 'excellent') {
+                levelBadge.textContent = '优秀';
+                levelBadge.className = 'status-badge status-excellent';
+            } else if (dashboardData.safetyLevel === 'good') {
+                levelBadge.textContent = '良好';
+                levelBadge.className = 'status-badge status-good';
+            } else {
+                levelBadge.textContent = '警告';
+                levelBadge.className = 'status-badge status-warning';
+            }
+            
+            document.getElementById('risk-count').textContent = dashboardData.riskCount;
+            document.getElementById('skills-count').textContent = dashboardData.skillsVerified;
+            document.getElementById('avg-reputation').textContent = dashboardData.avgReputation + '/100';
+            document.getElementById('red-team-pass-rate').textContent = dashboardData.redTeamPassRate + '%';
+            document.getElementById('vulnerability-count').textContent = dashboardData.vulnerabilityCount;
+            
+            // 更新事故列表
+            const incidentList = document.getElementById('incident-list');
+            incidentList.innerHTML = '';
+            dashboardData.incidents.forEach(incident => {
+                const li = document.createElement('li');
+                li.className = 'incident-item';
+                li.innerHTML = `
+                    <div class="incident-title">${incident.title}</div>
+                    <div class="incident-lesson">💡 ${incident.lesson}</div>
+                `;
+                incidentList.appendChild(li);
+            });
+            
+            // 更新建议列表
+            const recList = document.getElementById('recommendation-list');
+            recList.innerHTML = '';
+            dashboardData.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.className = `recommendation-item priority-${rec.priority}`;
+                li.textContent = rec.text;
+                recList.appendChild(li);
+            });
+        }
+        
+        // 创建安全评分图表
+        const safetyCtx = document.getElementById('safetyChart').getContext('2d');
+        new Chart(safetyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['安全', '风险'],
+                datasets: [{
+                    data: [dashboardData.overallScore, 100 - dashboardData.overallScore],
+                    backgroundColor: ['#4CAF50', '#f44336'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        
+        // 创建信誉评分图表
+        const repCtx = document.getElementById('reputationChart').getContext('2d');
+        new Chart(repCtx, {
+            type: 'bar',
+            data: {
+                labels: ['可信', '可靠', '中性', '可疑'],
+                datasets: [{
+                    label: 'Skills数量',
+                    data: [5, 4, 2, 1],
+                    backgroundColor: ['#4CAF50', '#8BC34A', '#FFC107', '#f44336']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // 创建红队测试图表
+        const rtCtx = document.getElementById('redTeamChart').getContext('2d');
+        new Chart(rtCtx, {
+            type: 'pie',
+            data: {
+                labels: ['通过', '失败'],
+                datasets: [{
+                    data: [
+                        dashboardData.redTeamPassRate,
+                        100 - dashboardData.redTeamPassRate
+                    ],
+                    backgroundColor: ['#4CAF50', '#f44336']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        
+        // 初始化Dashboard
+        updateDashboard();
+    </script>
+</body>
+</html>
